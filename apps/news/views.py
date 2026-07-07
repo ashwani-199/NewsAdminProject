@@ -4,6 +4,7 @@ from django.views.generic import ListView, DetailView, TemplateView
 from django.db.models import Count, Q, F, Sum
 from django.utils import timezone
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.conf import settings
@@ -151,7 +152,7 @@ class AuthorView(ListView):
     paginate_by = 12
 
     def get_queryset(self):
-        self.author = get_object_or_404(settings.AUTH_USER_MODEL, pk=self.kwargs['pk'])
+        self.author = get_object_or_404(get_user_model(), pk=self.kwargs['pk'])
         return Article.objects.filter(
             status='published', author=self.author
         ).select_related('author', 'category')
