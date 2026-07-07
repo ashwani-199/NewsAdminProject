@@ -1,0 +1,29 @@
+<div>
+    <h2 class="text-xl font-bold mb-4"><i class="fas fa-eye text-green-500 mr-2"></i>Most Viewed</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {% for article in most_viewed %}
+        <article class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition group">
+            {% if article.featured_image %}
+            <a href="{{ article.get_absolute_url }}">
+                <img src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="w-full h-40 object-cover group-hover:scale-105 transition duration-500" loading="lazy">
+            </a>
+            {% endif %}
+            <div class="p-4">
+                <div class="flex items-center gap-2 text-xs text-gray-500 mb-1">
+                    <span class="text-blue-600 font-medium">{{ article.category.name }}</span>
+                    <span>{{ article.formatted_published_at }}</span>
+                </div>
+                <h3 class="font-semibold group-hover:text-blue-600 transition">
+                    <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+                </h3>
+                <div class="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                    <span><i class="far fa-eye mr-1"></i>{{ article.views_count }}</span>
+                    <span><i class="far fa-heart mr-1"></i>{{ article.likes_count }}</span>
+                </div>
+            </div>
+        </article>
+        {% empty %}
+        <div class="col-span-2 text-center py-8 text-gray-500">No articles yet.</div>
+        {% endfor %}
+    </div>
+</div>

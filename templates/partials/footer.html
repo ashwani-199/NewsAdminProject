@@ -1,0 +1,55 @@
+<footer class="bg-gray-900 text-gray-300 mt-12">
+    <div class="container mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div>
+                <h3 class="text-white text-lg font-bold mb-4"><i class="fas fa-newspaper mr-2 text-blue-400"></i>NewsPortal</h3>
+                <p class="text-sm leading-relaxed">Your trusted source for the latest news, breaking stories, and in-depth coverage from around the world.</p>
+                <div class="flex gap-3 mt-4">
+                    <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-400 transition"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-pink-600 transition"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-red-600 transition"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-white text-lg font-bold mb-4">Quick Links</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="{% url 'news:about' %}" class="hover:text-white transition">About Us</a></li>
+                    <li><a href="{% url 'news:contact' %}" class="hover:text-white transition">Contact</a></li>
+                    <li><a href="{% url 'news:privacy_policy' %}" class="hover:text-white transition">Privacy Policy</a></li>
+                    <li><a href="{% url 'news:terms' %}" class="hover:text-white transition">Terms & Conditions</a></li>
+                    <li><a href="{% url 'news:disclaimer' %}" class="hover:text-white transition">Disclaimer</a></li>
+                    <li><a href="{% url 'news:faq' %}" class="hover:text-white transition">FAQ</a></li>
+                    <li><a href="{% url 'news:careers' %}" class="hover:text-white transition">Careers</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-white text-lg font-bold mb-4">Categories</h3>
+                <ul class="space-y-2 text-sm">
+                    {% for cat in nav_categories|slice:":6" %}
+                    <li><a href="{{ cat.get_absolute_url }}" class="hover:text-white transition">{{ cat.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-white text-lg font-bold mb-4">Newsletter</h3>
+                <p class="text-sm mb-3">Subscribe to get the latest news delivered to your inbox.</p>
+                <form hx-post="{% url 'newsletter:subscribe' %}" hx-target="this" class="flex gap-2">
+                    {% csrf_token %}
+                    <input type="email" name="email" placeholder="Your email" required
+                           class="flex-1 px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 text-sm focus:border-blue-500 outline-none">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
+            {% if site_settings.copyright_text %}
+                <p>{{ site_settings.copyright_text }}</p>
+            {% else %}
+                <p>&copy; {% now "Y" %} NewsPortal. All rights reserved.</p>
+            {% endif %}
+        </div>
+    </div>
+</footer>

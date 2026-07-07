@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Reading History - NewsPortal{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6 max-w-4xl">
+    <h1 class="text-2xl font-bold mb-6"><i class="fas fa-history mr-2 text-green-500"></i>Reading History</h1>
+    <div class="space-y-2">
+        {% for view in history %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+            <a href="{{ view.article.get_absolute_url }}" class="font-medium hover:text-blue-600">{{ view.article.title }}</a>
+            <p class="text-xs text-gray-500">{{ view.viewed_at|timesince }} ago</p>
+        </div>
+        {% empty %}<p class="text-center py-8 text-gray-500">No reading history yet.</p>{% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
+    <h3 class="text-lg font-bold mb-4">Related Articles</h3>
+    <div class="space-y-4">
+        {% for related in related_articles %}
+        <a href="{{ related.get_absolute_url }}" class="flex gap-3 group">
+            {% if related.featured_image %}
+            <img src="{{ related.featured_image.url }}" alt="" class="w-20 h-16 object-cover rounded-lg flex-shrink-0" loading="lazy">
+            {% endif %}
+            <div class="flex-1 min-w-0">
+                <h4 class="text-sm font-medium group-hover:text-blue-600 transition line-clamp-2">{{ related.title }}</h4>
+                <span class="text-xs text-gray-500">{{ related.formatted_published_at }}</span>
+            </div>
+        </a>
+        {% empty %}
+        <p class="text-sm text-gray-500">No related articles.</p>
+        {% endfor %}
+    </div>
+</div>

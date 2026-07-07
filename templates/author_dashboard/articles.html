@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}My Articles - NewsPortal{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold"><i class="fas fa-file-alt mr-2 text-blue-600"></i>My Articles</h1>
+        <a href="{% url 'dashboard:create_article' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"><i class="fas fa-plus mr-1"></i>New Article</a>
+    </div>
+    <div class="flex gap-2 mb-4">
+        <a href="{% url 'dashboard:author_articles' %}" class="px-3 py-1.5 rounded-lg text-sm {% if not current_status %}bg-blue-600 text-white{% else %}bg-gray-200 dark:bg-gray-700{% endif %}">All</a>
+        <a href="?status=published" class="px-3 py-1.5 rounded-lg text-sm {% if current_status == 'published' %}bg-blue-600 text-white{% else %}bg-gray-200 dark:bg-gray-700{% endif %}">Published</a>
+        <a href="?status=draft" class="px-3 py-1.5 rounded-lg text-sm {% if current_status == 'draft' %}bg-blue-600 text-white{% else %}bg-gray-200 dark:bg-gray-700{% endif %}">Drafts</a>
+        <a href="?status=archived" class="px-3 py-1.5 rounded-lg text-sm {% if current_status == 'archived' %}bg-blue-600 text-white{% else %}bg-gray-200 dark:bg-gray-700{% endif %}">Archived</a>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                    <th class="text-left p-4 font-medium">Title</th>
+                    <th class="text-left p-4 font-medium">Category</th>
+                    <th class="text-left p-4 font-medium">Status</th>
+                    <th class="text-left p-4 font-medium">Views</th>
+                    <th class="text-left p-4 font-medium">Date</th>
+                    <th class="text-left p-4 font-medium">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for article in articles %}
+                <tr class="border-t border-gray-100 dark:border-gray-700">
+                    <td class="p-4"><a href="{% url 'dashboard:edit_article' article.slug %}" class="font-medium hover:text-blue-600">{{ article.title|truncatewords:8 }}</a></td>
+                    <td class="p-4 text-gray-500">{{ article.category.name|default:'-' }}</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-xs {% if article.status == 'published' %}bg-green-100 text-green-700{% elif article.status == 'draft' %}bg-yellow-100 text-yellow-700{% else %}bg-gray-100 text-gray-700{% endif %}">{{ article.get_status_display }}</span></td>
+                    <td class="p-4">{{ article.views_count }}</td>
+                    <td class="p-4 text-gray-500">{{ article.created_at|date:"M d, Y" }}</td>
+                    <td class="p-4">
+                        <div class="flex gap-2">
+                            <a href="{% url 'dashboard:edit_article' article.slug %}" class="text-blue-600 hover:underline text-xs"><i class="fas fa-edit"></i></a>
+                            <form method="post" action="{% url 'dashboard:delete_article' article.pk %}" onsubmit="return confirm('Delete this article?')">
+                                {% csrf_token %}<button type="submit" class="text-red-500 hover:underline text-xs"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="p-8 text-center text-gray-500">No articles found. <a href="{% url 'dashboard:create_article' %}" class="text-blue-600 hover:underline">Create your first article</a></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

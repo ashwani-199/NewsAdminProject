@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Search Results - NewsPortal{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold mb-6">
+        {% if query %}Search results for: <span class="text-blue-600">"{{ query }}"</span>{% else %}Search News{% endif %}
+    </h1>
+
+    <form method="get" class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm mb-6">
+        <div class="flex gap-2 mb-4">
+            <input type="text" name="q" value="{{ query }}" placeholder="Search articles..." class="flex-1 px-4 py-2.5 border rounded-lg focus:border-blue-500 outline-none">
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700"><i class="fas fa-search mr-1"></i>Search</button>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <select name="category" class="px-3 py-2 border rounded-lg text-sm">
+                <option value="">All Categories</option>
+                {% for cat in categories %}
+                <option value="{{ cat.slug }}" {% if request.GET.category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="date" name="date_from" value="{{ request.GET.date_from }}" class="px-3 py-2 border rounded-lg text-sm" placeholder="From">
+            <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="px-3 py-2 border rounded-lg text-sm" placeholder="To">
+            <button type="submit" class="bg-gray-500 text-white px-3 py-2 rounded-lg text-sm hover:bg-gray-600">Filter</button>
+        </div>
+    </form>
+
+    <div class="space-y-4">
+        {% for article in article_list %}
+        <article class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm flex flex-col md:flex-row">
+            {% if article.featured_image %}
+            <a href="{{ article.get_absolute_url }}" class="md:w-48 flex-shrink-0">
+                <img src="{{ article.featured_image.url }}" alt="" class="w-full h-36 object-cover" loading="lazy">
+            </a>
+            {% endif %}
+            <div class="p-5 flex-1">
+                <span class="text-xs text-blue-600 font-medium uppercase">{{ article.category.name }}</span>
+                <h2 class="text-lg font-bold mt-1"><a href="{{ article.get_absolute_url }}" class="hover:text-blue-600">{{ article.title }}</a></h2>
+                <p class="text-sm text-gray-500 mt-1">{{ article.summary|truncatewords:25 }}</p>
+                <div class="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                    <span>{{ article.author.get_full_name|default:article.author.username }}</span>
+                    <span>{{ article.formatted_published_at }}</span>
+                </div>
+            </div>
+        </article>
+        {% empty %}
+        <div class="text-center py-12">
+            <i class="fas fa-search text-5xl text-gray-300 mb-4"></i>
+            <p class="text-gray-500">{% if query %}No results found for "{{ query }}"{% else %}Enter a search term to find articles.{% endif %}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

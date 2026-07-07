@@ -1,0 +1,18 @@
+<div class="mt-8">
+    <h2 class="text-xl font-bold mb-4"><i class="fas fa-th-large text-blue-600 mr-2"></i>Popular Categories</h2>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        {% for cat in categories %}
+        <a href="{{ cat.get_absolute_url }}" class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm hover:shadow-md transition group">
+            <div class="text-center">
+                {% if cat.icon %}
+                <i class="{{ cat.icon }} text-3xl text-blue-600 group-hover:scale-110 transition inline-block mb-2"></i>
+                {% else %}
+                <i class="fas fa-folder-open text-3xl text-blue-600 group-hover:scale-110 transition inline-block mb-2"></i>
+                {% endif %}
+                <h3 class="font-semibold group-hover:text-blue-600 transition">{{ cat.name }}</h3>
+                <span class="text-xs text-gray-500">{{ cat.article_count }} articles</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>

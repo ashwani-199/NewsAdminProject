@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Author Dashboard - NewsPortal{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold"><i class="fas fa-pen-fancy mr-2 text-blue-600"></i>Author Dashboard</h1>
+        <a href="{% url 'dashboard:create_article' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"><i class="fas fa-plus mr-1"></i>New Article</a>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm">
+            <p class="text-gray-500 text-sm">Total Articles</p>
+            <p class="text-2xl font-bold">{{ total_articles }}</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm">
+            <p class="text-gray-500 text-sm">Published</p>
+            <p class="text-2xl font-bold text-green-600">{{ published_articles }}</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm">
+            <p class="text-gray-500 text-sm">Drafts</p>
+            <p class="text-2xl font-bold text-yellow-600">{{ draft_articles }}</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm">
+            <p class="text-gray-500 text-sm">Total Views</p>
+            <p class="text-2xl font-bold text-blue-600">{{ total_views }}</p>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm">
+            <h2 class="text-lg font-bold mb-4">Quick Links</h2>
+            <div class="grid grid-cols-2 gap-3">
+                <a href="{% url 'dashboard:author_articles' %}" class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-blue-50 transition text-center">
+                    <i class="fas fa-list text-blue-600 text-2xl mb-1"></i>
+                    <span class="block text-sm">My Articles</span>
+                </a>
+                <a href="{% url 'dashboard:create_article' %}" class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-green-50 transition text-center">
+                    <i class="fas fa-plus-circle text-green-600 text-2xl mb-1"></i>
+                    <span class="block text-sm">Write New</span>
+                </a>
+                <a href="{% url 'dashboard:author_stats' %}" class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-purple-50 transition text-center">
+                    <i class="fas fa-chart-bar text-purple-600 text-2xl mb-1"></i>
+                    <span class="block text-sm">Statistics</span>
+                </a>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm">
+            <h2 class="text-lg font-bold mb-4">Recent Articles</h2>
+            <div class="space-y-2">
+                {% for article in recent_articles %}
+                <div class="flex items-center justify-between p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded">
+                    <a href="{% url 'dashboard:edit_article' article.slug %}" class="text-sm font-medium hover:text-blue-600">{{ article.title|truncatewords:6 }}</a>
+                    <span class="text-xs px-2 py-0.5 rounded {% if article.status == 'published' %}bg-green-100 text-green-700{% elif article.status == 'draft' %}bg-yellow-100 text-yellow-700{% else %}bg-gray-100 text-gray-700{% endif %}">{{ article.get_status_display }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

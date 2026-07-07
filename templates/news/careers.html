@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Careers - NewsPortal{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12 max-w-3xl">
+    <h1 class="text-3xl font-bold mb-6">Careers at NewsPortal</h1>
+    <p class="text-gray-500 mb-8">Join our team of passionate journalists and media professionals.</p>
+    <div class="space-y-4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
+            <h2 class="text-xl font-bold">Senior Journalist</h2>
+            <p class="text-sm text-gray-500 mb-2">Full Time | New York</p>
+            <p class="text-sm">We're looking for an experienced journalist to cover breaking news and in-depth stories.</p>
+            <a href="{% url 'news:contact' %}" class="inline-block mt-3 text-blue-600 hover:underline text-sm">Apply Now →</a>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
+            <h2 class="text-xl font-bold">Content Editor</h2>
+            <p class="text-sm text-gray-500 mb-2">Full Time | Remote</p>
+            <p class="text-sm">Join our editorial team to review and improve content quality.</p>
+            <a href="{% url 'news:contact' %}" class="inline-block mt-3 text-blue-600 hover:underline text-sm">Apply Now →</a>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
+            <h2 class="text-xl font-bold">Photographer</h2>
+            <p class="text-sm text-gray-500 mb-2">Contract | New York</p>
+            <p class="text-sm">Capture compelling images to accompany our news stories.</p>
+            <a href="{% url 'news:contact' %}" class="inline-block mt-3 text-blue-600 hover:underline text-sm">Apply Now →</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

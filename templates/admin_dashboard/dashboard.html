@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard - NewsPortal{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold mb-6"><i class="fas fa-cog mr-2 text-gray-600"></i>Admin Dashboard</h1>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm">
+            <p class="text-gray-500 text-sm">Total Users</p>
+            <p class="text-2xl font-bold">{{ total_users }}</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm">
+            <p class="text-gray-500 text-sm">Articles</p>
+            <p class="text-2xl font-bold">{{ total_articles }} <span class="text-sm text-green-600">({{ published_articles }} published)</span></p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm">
+            <p class="text-gray-500 text-sm">Categories</p>
+            <p class="text-2xl font-bold">{{ total_categories }}</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm">
+            <p class="text-gray-500 text-sm">Comments</p>
+            <p class="text-2xl font-bold">{{ total_comments }} <span class="text-sm text-yellow-600">({{ pending_comments }} pending)</span></p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm">
+            <p class="text-gray-500 text-sm">Subscribers</p>
+            <p class="text-2xl font-bold">{{ total_subscribers }}</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm">
+            <p class="text-gray-500 text-sm">Messages</p>
+            <p class="text-2xl font-bold">{{ total_messages }} <span class="text-sm text-red-600">({{ unread_messages }} unread)</span></p>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm">
+            <h2 class="text-lg font-bold mb-4">Quick Actions</h2>
+            <div class="grid grid-cols-2 gap-2">
+                <a href="{% url 'dashboard:admin_users' %}" class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-center text-sm hover:bg-blue-50">Users</a>
+                <a href="{% url 'dashboard:admin_articles' %}" class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-center text-sm hover:bg-green-50">Articles</a>
+                <a href="{% url 'dashboard:admin_comments' %}" class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-center text-sm hover:bg-yellow-50">Comments</a>
+                <a href="{% url 'dashboard:admin_categories' %}" class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-center text-sm hover:bg-purple-50">Categories</a>
+                <a href="{% url 'dashboard:admin_subscribers' %}" class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-center text-sm hover:bg-pink-50">Subscribers</a>
+                <a href="{% url 'dashboard:admin_settings' %}" class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-center text-sm hover:bg-orange-50">Settings</a>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm">
+            <h2 class="text-lg font-bold mb-4">Recent Articles</h2>
+            {% for article in recent_articles %}
+            <div class="py-2 border-b border-gray-100"><a href="{% url 'dashboard:admin_articles' %}" class="text-sm hover:text-blue-600">{{ article.title|truncatewords:8 }}</a></div>
+            {% endfor %}
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm">
+            <h2 class="text-lg font-bold mb-4">Recent Users</h2>
+            {% for user in recent_users %}
+            <div class="py-2 border-b border-gray-100 text-sm">{{ user.username }} <span class="text-gray-500">({{ user.email }})</span></div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

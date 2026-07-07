@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}News Portal - Latest News, Breaking Stories & Updates{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    {% include 'partials/breaking_news_slider.html' %}
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+        <div class="lg:col-span-2">
+            {% include 'partials/featured_articles.html' %}
+        </div>
+        <div class="space-y-6">
+            {% include 'partials/trending_sidebar.html' %}
+            {% for ad in sidebar_ads %}
+                {% if ad.is_valid %}
+                <div class="bg-gray-200 dark:bg-gray-700 rounded-lg p-4 text-center text-sm text-gray-500">
+                    {% if ad.script_code %}{{ ad.script_code|safe }}{% elif ad.image %}<a href="{% url 'ads:ad_click' ad.pk %}"><img src="{{ ad.image.url }}" alt="{{ ad.title }}" class="mx-auto"></a>{% endif %}
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    {% include 'partials/weather_widget.html' %}
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+        <div class="lg:col-span-2">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold"><i class="fas fa-clock text-blue-600 mr-2"></i>Latest News</h2>
+                <a href="{% url 'news:search' %}" class="text-sm text-blue-600 hover:underline">View All</a>
+            </div>
+            <div class="space-y-4">
+                {% for article in latest_news %}
+                <article class="flex gap-4 bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm hover:shadow-md transition">
+                    {% if article.featured_image %}
+                    <a href="{{ article.get_absolute_url }}" class="flex-shrink-0">
+                        <img src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="w-32 h-24 object-cover rounded-lg" loading="lazy">
+                    </a>
+                    {% endif %}
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 text-xs text-gray-500 mb-1">
+                            <a href="{{ article.category.get_absolute_url }}" class="text-blue-600 font-medium">{{ article.category.name }}</a>
+                            <span>{{ article.formatted_published_at }}</span>
+                            <span><i class="far fa-clock mr-1"></i>{{ article.reading_time }} min read</span>
+                        </div>
+                        <h3 class="font-semibold mb-1">
+                            <a href="{{ article.get_absolute_url }}" class="hover:text-blue-600 transition line-clamp-2">{{ article.title }}</a>
+                        </h3>
+                        <p class="text-sm text-gray-500 line-clamp-2">{{ article.summary|truncatewords:20 }}</p>
+                        <div class="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                            <span><i class="far fa-eye mr-1"></i>{{ article.views_count }}</span>
+                            <span><i class="far fa-heart mr-1"></i>{{ article.likes_count }}</span>
+                            <span><i class="far fa-comment mr-1"></i>{{ article.comment_count }}</span>
+                        </div>
+                    </div>
+                </article>
+                {% empty %}
+                <p class="text-gray-500 text-center py-8">No articles published yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="space-y-6">
+            {% include 'partials/editor_picks.html' %}
+            {% include 'partials/newsletter_widget.html' %}
+        </div>
+    </div>
+
+    {% include 'partials/categories_section.html' %}
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+        <div class="lg:col-span-2">
+            {% include 'partials/most_viewed.html' %}
+        </div>
+        <div>
+            {% include 'partials/social_feed.html' %}
+        </div>
+    </div>
+</div>
+{% endblock %}

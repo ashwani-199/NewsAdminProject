@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}About Us - NewsPortal{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="max-w-3xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6">About NewsPortal</h1>
+        <div class="prose dark:prose-invert max-w-none">
+            <p class="text-lg leading-relaxed">Welcome to NewsPortal, your trusted source for the latest news, breaking stories, and in-depth coverage from around the world.</p>
+            <p>Our mission is to deliver accurate, timely, and unbiased news to our readers. We cover a wide range of topics including politics, technology, business, sports, entertainment, health, science, education, lifestyle, and world news.</p>
+            <h2>Our Team</h2>
+            <p>Our team of experienced journalists and editors work around the clock to bring you the most important stories. We are committed to journalistic integrity and excellence.</p>
+            <h2>Contact Us</h2>
+            <p>Have a story tip or feedback? We'd love to hear from you. Visit our <a href="{% url 'news:contact' %}" class="text-blue-600 hover:underline">Contact page</a> to get in touch.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

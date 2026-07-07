@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Article Management - NewsPortal{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold mb-6">Article Management</h1>
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50 dark:bg-gray-700">
+                <tr><th class="p-3 text-left">Title</th><th class="p-3 text-left">Author</th><th class="p-3 text-left">Category</th><th class="p-3 text-left">Status</th><th class="p-3 text-left">Views</th><th class="p-3 text-left">Date</th></tr>
+            </thead>
+            <tbody>
+                {% for article in articles %}
+                <tr class="border-t border-gray-100 dark:border-gray-700">
+                    <td class="p-3"><a href="{% url 'dashboard:admin_articles' %}" class="hover:text-blue-600">{{ article.title|truncatewords:8 }}</a></td>
+                    <td class="p-3 text-gray-500">{{ article.author.username }}</td>
+                    <td class="p-3 text-gray-500">{{ article.category.name }}</td>
+                    <td class="p-3">{{ article.get_status_display }}</td>
+                    <td class="p-3">{{ article.views_count }}</td>
+                    <td class="p-3 text-gray-500">{{ article.created_at|date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

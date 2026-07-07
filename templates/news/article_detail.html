@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ article.meta_title|default:article.title }} - NewsPortal{% endblock %}
+{% block meta_description %}{{ article.meta_description|default:article.summary }}{% endblock %}
+{% block meta_keywords %}{{ article.meta_keywords }}{% endblock %}
+{% block og_title %}{{ article.title }}{% endblock %}
+{% block og_description %}{{ article.summary }}{% endblock %}
+{% block og_image %}{% if article.featured_image %}{{ request.scheme }}://{{ request.get_host }}{{ article.featured_image.url }}{% endif %}{% endblock %}
+
+{% block content %}
+<article class="container mx-auto px-4 py-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2">
+            <nav class="text-sm text-gray-500 mb-4">
+                <a href="{% url 'news:home' %}" class="hover:text-blue-600">Home</a>
+                <span class="mx-2">/</span>
+                <a href="{{ article.category.get_absolute_url }}" class="hover:text-blue-600">{{ article.category.name }}</a>
+                <span class="mx-2">/</span>
+                <span class="text-gray-700 dark:text-gray-300">{{ article.title|truncatewords:6 }}</span>
+            </nav>
+
+            <div class="flex items-center gap-2 mb-3">
+                {% if article.is_breaking %}<span class="bg-red-500 text-white px-2 py-0.5 rounded text-xs font-bold">BREAKING</span>{% endif %}
+                {% if article.is_trending %}<span class="bg-orange-500 text-white px-2 py-0.5 rounded text-xs font-bold">TRENDING</span>{% endif %}
+                {% if article.is_featured %}<span class="bg-yellow-500 text-white px-2 py-0.5 rounded text-xs font-bold">FEATURED</span>{% endif %}
+            </div>
+
+            <h1 class="text-3xl md:text-4xl font-bold mb-4 leading-tight">{{ article.title }}</h1>
+
+            <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-6">
+                <a href="{% url 'news:author' article.author.pk %}" class="flex items-center gap-2 hover:text-blue-600">
+                    {% if article.author.avatar %}
+                    <img src="{{ article.author.avatar.url }}" alt="" class="w-10 h-10 rounded-full object-cover">
+                    {% else %}
+                    <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">{{ article.author.username|first|upper }}</div>
+                    {% endif %}
+                    <div>
+                        <span class="font-medium text-gray-700 dark:text-gray-300">{{ article.author.get_full_name|default:article.author.username }}</span>
+                        <span class="block text-xs">{{ article.formatted_published_at }}</span>
+                    </div>
+                </a>
+                <span><i class="far fa-clock mr-1"></i>{{ article.reading_time }} min read</span>
+                <span><i class="far fa-eye mr-1"></i>{{ article.views_count }} views</span>
+            </div>
+
+            {% if article.featured_image %}
+            <figure class="mb-6">
+                <img src="{{ article.featured_image.url }}" alt="{{ article.featured_image_alt|default:article.title }}" class="w-full rounded-xl shadow-md" loading="lazy">
+                {% if article.featured_image_alt %}
+                <figcaption class="text-sm text-gray-500 mt-2 text-center">{{ article.featured_image_alt }}</figcaption>
+                {% endif %}
+            </figure>
+            {% endif %}
+
+            <div class="flex items-center gap-2 mb-6 print:hidden">
+                <button @click="window.print()" class="flex items-center gap-1 px-3 py-1.5 border border-gray-300 rounded-lg text-sm hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <i class="fas fa-print"></i> Print
+                </button>
+                {% if user.is_authenticated %}
+                <button class="flex items-center gap-1 px-3 py-1.5 border rounded-lg text-sm like-btn" data-article-id="{{ article.pk }}">
+                    <i class="{% if user_liked %}fas text-red-500{% else %}far{% endif %} fa-heart"></i>
+                    <span class="like-count">{{ article.likes_count }}</span>
+                </button>
+                <button class="flex items-center gap-1 px-3 py-1.5 border rounded-lg text-sm bookmark-btn" data-article-id="{{ article.pk }}">
+                    <i class="{% if user_bookmarked %}fas text-yellow-500{% else %}far{% endif %} fa-bookmark"></i>
+                    <span>{% if user_bookmarked %}Saved{% else %}Save{% endif %}</span>
+                </button>
+                {% endif %}
+                <div class="flex items-center gap-1 ml-auto">
+                    <a href="#" class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm hover:bg-blue-700"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="w-8 h-8 bg-sky-500 text-white rounded-full flex items-center justify-center text-sm hover:bg-sky-600"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center text-sm hover:bg-green-700"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#" class="w-8 h-8 bg-blue-700 text-white rounded-full flex items-center justify-center text-sm hover:bg-blue-800"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            {% if article.summary %}
+            <div class="bg-gray-100 dark:bg-gray-800 rounded-xl p-5 mb-6 italic text-gray-600 dark:text-gray-400 border-l-4 border-blue-500">
+                {{ article.summary }}
+            </div>
+            {% endif %}
+
+            <div class="prose dark:prose-invert max-w-none mb-8 article-content">
+                {{ article.content|safe }}
+            </div>
+
+            {% if article.tags.all %}
+            <div class="flex flex-wrap items-center gap-2 mb-6">
+                <span class="font-medium text-sm">Tags:</span>
+                {% for tag in article.tags.all %}
+                <a href="{% url 'news:tag' tag.slug %}" class="bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full text-sm hover:bg-blue-100 dark:hover:bg-blue-900 transition">#{{ tag.name }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <hr class="my-6 border-gray-200 dark:border-gray-700">
+
+            <div class="flex items-center justify-between">
+                <div>
+                    {% if prev_article %}
+                    <a href="{{ prev_article.get_absolute_url }}" class="text-sm text-gray-500 hover:text-blue-600">
+                        <i class="fas fa-arrow-left mr-1"></i> Previous
+                        <div class="font-medium text-gray-700 dark:text-gray-300">{{ prev_article.title|truncatewords:8 }}</div>
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="text-right">
+                    {% if next_article %}
+                    <a href="{{ next_article.get_absolute_url }}" class="text-sm text-gray-500 hover:text-blue-600">
+                        Next <i class="fas fa-arrow-right ml-1"></i>
+                        <div class="font-medium text-gray-700 dark:text-gray-300">{{ next_article.title|truncatewords:8 }}</div>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% include 'partials/comments_section.html' %}
+        </div>
+
+        <aside class="space-y-6">
+            {% include 'partials/author_card.html' %}
+            {% include 'partials/related_articles.html' %}
+            {% for ad in sidebar_ads %}
+                {% if ad.is_valid %}
+                <div class="bg-gray-200 dark:bg-gray-700 rounded-lg p-4 text-center text-sm text-gray-500">
+                    {% if ad.script_code %}{{ ad.script_code|safe }}{% elif ad.image %}<a href="{% url 'ads:ad_click' ad.pk %}"><img src="{{ ad.image.url }}" alt="{{ ad.title }}" class="mx-auto"></a>{% endif %}
+                </div>
+                {% endif %}
+            {% endfor %}
+        </aside>
+    </div>
+</article>
+
+<script>
+document.querySelectorAll('.like-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const articleId = this.dataset.articleId;
+        fetch(`/like/${articleId}/`, { method: 'POST', headers: { 'X-CSRFToken': '{{ csrf_token }}' } })
+            .then(r => r.json()).then(d => {
+                this.querySelector('i').className = d.liked ? 'fas fa-heart text-red-500' : 'far fa-heart';
+                this.querySelector('.like-count').textContent = d.count;
+            });
+    });
+});
+document.querySelectorAll('.bookmark-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const articleId = this.dataset.articleId;
+        fetch(`/bookmark/${articleId}/`, { method: 'POST', headers: { 'X-CSRFToken': '{{ csrf_token }}' } })
+            .then(r => r.json()).then(d => {
+                this.querySelector('i').className = d.bookmarked ? 'fas fa-bookmark text-yellow-500' : 'far fa-bookmark';
+                this.querySelector('span').textContent = d.bookmarked ? 'Saved' : 'Save';
+            });
+    });
+});
+</script>
+{% endblock %}

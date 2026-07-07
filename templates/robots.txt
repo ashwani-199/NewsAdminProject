@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /account/
+Disallow: /api/auth/
+Disallow: /notifications/
+Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml

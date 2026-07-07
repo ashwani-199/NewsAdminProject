@@ -1,0 +1,19 @@
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
+    <h3 class="text-lg font-bold mb-4 flex items-center"><i class="fas fa-pen-fancy text-purple-500 mr-2"></i>Editor's Picks</h3>
+    <div class="space-y-4">
+        {% for article in editor_picks %}
+        <a href="{{ article.get_absolute_url }}" class="flex gap-3 group">
+            {% if article.featured_image %}
+            <img src="{{ article.featured_image.url }}" alt="" class="w-20 h-16 object-cover rounded-lg flex-shrink-0" loading="lazy">
+            {% endif %}
+            <div class="flex-1 min-w-0">
+                <h4 class="text-sm font-medium group-hover:text-blue-600 transition line-clamp-2">{{ article.title }}</h4>
+                <span class="text-xs text-gray-500">{{ article.formatted_published_at }}</span>
+            </div>
+        </a>
+        {% if not forloop.last %}<hr class="border-gray-100 dark:border-gray-700">{% endif %}
+        {% empty %}
+        <p class="text-sm text-gray-500">No editor picks yet.</p>
+        {% endfor %}
+    </div>
+</div>

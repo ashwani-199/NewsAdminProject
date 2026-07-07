@@ -1,0 +1,17 @@
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
+    <h3 class="text-lg font-bold mb-4 flex items-center"><i class="fas fa-fire text-orange-500 mr-2"></i>Trending Now</h3>
+    <div class="space-y-3">
+        {% for article in trending_news %}
+        <a href="{{ article.get_absolute_url }}" class="flex items-start gap-3 group">
+            <span class="text-2xl font-bold text-gray-300 dark:text-gray-600 min-w-[30px]">{{ forloop.counter }}</span>
+            <div>
+                <h4 class="text-sm font-medium group-hover:text-blue-600 transition line-clamp-2">{{ article.title }}</h4>
+                <span class="text-xs text-gray-500">{{ article.views_count }} views</span>
+            </div>
+        </a>
+        {% if not forloop.last %}<hr class="border-gray-100 dark:border-gray-700">{% endif %}
+        {% empty %}
+        <p class="text-sm text-gray-500">No trending articles.</p>
+        {% endfor %}
+    </div>
+</div>

@@ -1,0 +1,25 @@
+<div x-show="searchOpen" x-cloak class="fixed inset-0 bg-black/50 z-50 flex items-start justify-center pt-20" @click.away="searchOpen = false">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 p-6" @click.stop>
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold">Search News</h3>
+            <button @click="searchOpen = false" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form hx-get="{% url 'news:search' %}" hx-target="#search-results" hx-trigger="keyup changed delay:500ms" @submit.prevent="window.location.href = '{% url 'news:search' %}?q=' + document.getElementById('search-input').value">
+            <div class="relative">
+                <input type="text" id="search-input" name="q"
+                       class="w-full px-5 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-700 outline-none text-lg"
+                       placeholder="Search for news, topics, authors..."
+                       hx-get="{% url 'news:search_suggestions' %}"
+                       hx-trigger="keyup changed delay:300ms"
+                       hx-target="#suggestions">
+                <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 bg-blue-600 text-white p-2 rounded-xl hover:bg-blue-700">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
+        <div id="suggestions" class="mt-2"></div>
+        <div id="search-results" class="mt-4 max-h-96 overflow-y-auto"></div>
+    </div>
+</div>

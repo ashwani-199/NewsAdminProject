@@ -1,0 +1,39 @@
+<div class="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5" x-data="weatherWidget()">
+    <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold"><i class="fas fa-cloud-sun text-yellow-500 mr-2"></i>Weather</h3>
+        <div class="flex items-center gap-4">
+            <template x-if="weather">
+                <div class="flex items-center gap-4">
+                    <span class="text-2xl font-bold" x-text="weather.temperature + '°C'"></span>
+                    <span class="text-sm text-gray-500" x-text="weather.description"></span>
+                    <img :src="'https://openweathermap.org/img/wn/' + weather.icon + '.png'" class="w-10 h-10">
+                </div>
+            </template>
+            <template x-if="!weather">
+                <span class="text-sm text-gray-500">Loading...</span>
+            </template>
+        </div>
+    </div>
+</div>
+<script>
+function weatherWidget() {
+    return {
+        weather: null,
+        init() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&units=metric&appid=YOUR_API_KEY`)
+                        .then(r => r.json())
+                        .then(d => {
+                            this.weather = {
+                                temperature: Math.round(d.main.temp),
+                                description: d.weather[0].description,
+                                icon: d.weather[0].icon
+                            };
+                        }).catch(() => { this.weather = { temperature: '--', description: 'Unavailable', icon: '01d' }; });
+                }, () => { this.weather = { temperature: '--', description: 'Location denied', icon: '01d' }; });
+            }
+        }
+    }
+}
+</script>

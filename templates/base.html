@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}News Portal - Your trusted source for latest news{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}news, breaking news, latest news{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}News Portal{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Your trusted source for latest news{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{% if site_settings and site_settings.site_logo %}{{ site_settings.site_logo.url }}{% endif %}{% endblock %}">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}News Portal{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Your trusted source for latest news{% endblock %}">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "NewsArticle",
+        "headline": "{% block schema_headline %}News Portal{% endblock %}",
+        "datePublished": "{% block schema_date %}{% endblock %}",
+        "author": {
+            "@type": "Person",
+            "name": "{% block schema_author %}News Portal{% endblock %}"
+        }
+    }
+    </script>
+    <title>{% block title %}News Portal{% endblock %}</title>
+    <script>
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        html { color-scheme: light; }
+        html.dark { color-scheme: dark; }
+        [x-cloak] { display: none !important; }
+        @media (min-width: 768px) {
+            .mega-menu:hover .mega-dropdown { display: block; }
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200" x-data="{ mobileMenu: false, searchOpen: false }">
+    {% include 'partials/header.html' %}
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    {% include 'partials/footer.html' %}
+    {% include 'partials/mobile_menu.html' %}
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
