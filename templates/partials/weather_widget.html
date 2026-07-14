@@ -22,7 +22,7 @@ function weatherWidget() {
         init() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(pos => {
-                    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&units=metric&appid=YOUR_API_KEY`)
+                    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&units=metric&appid={{ weather_api_key }}`)
                         .then(r => r.json())
                         .then(d => {
                             this.weather = {

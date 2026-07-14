@@ -10,7 +10,7 @@
                 <h1 class="text-2xl font-bold">Welcome Back</h1>
                 <p class="text-gray-500 text-sm">Sign in to your account</p>
             </div>
-            <form method="post" class="space-y-4">
+            <form method="post" class="space-y-4" id="loginForm" novalidate>
                 {% csrf_token %}
                 {% if form.non_field_errors %}
                 <div class="bg-red-50 dark:bg-red-900/20 text-red-600 p-3 rounded-lg text-sm">{{ form.non_field_errors }}</div>
@@ -18,10 +18,17 @@
                 <div>
                     <label class="block text-sm font-medium mb-1">Username or Email</label>
                     {{ form.username }}
+                    <p class="text-red-500 text-xs mt-1 hidden" id="loginUsernameError"></p>
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">Password</label>
-                    {{ form.password }}
+                    <div class="relative">
+                        {{ form.password }}
+                        <button type="button" onclick="togglePassword('id_password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <p class="text-red-500 text-xs mt-1 hidden" id="loginPasswordError"></p>
                 </div>
                 <div class="flex items-center justify-between text-sm">
                     <a href="{% url 'account:forgot_password' %}" class="text-blue-600 hover:underline">Forgot password?</a>
@@ -36,4 +43,39 @@
         </div>
     </div>
 </div>
+<script>
+function togglePassword(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') { input.type = 'text'; icon.className = 'fas fa-eye-slash'; }
+    else { input.type = 'password'; icon.className = 'fas fa-eye'; }
+}
+function showError(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.classList.remove('hidden'); }
+function clearError(id) { const el = document.getElementById(id); el.textContent = ''; el.classList.add('hidden'); }
+function validateLoginEmail(val) {
+    if (!val.trim()) return 'This field is required.';
+    if (val.includes('@')) { const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; if (!re.test(val)) return 'Enter a valid email address.'; }
+    return '';
+}
+function validateLoginPassword(val) {
+    if (!val) return 'This field is required.';
+    if (val.length < 6) return 'Password must be at least 6 characters.';
+    return '';
+}
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    let valid = true;
+    const user = document.getElementById('id_username');
+    const pass = document.getElementById('id_password');
+    const ue = validateLoginEmail(user.value); const pe = validateLoginPassword(pass.value);
+    if (ue) { showError('loginUsernameError', ue); valid = false; } else clearError('loginUsernameError');
+    if (pe) { showError('loginPasswordError', pe); valid = false; } else clearError('loginPasswordError');
+    if (!valid) e.preventDefault();
+});
+document.getElementById('id_username').addEventListener('input', function() {
+    const e = validateLoginEmail(this.value); if (e) showError('loginUsernameError', e); else clearError('loginUsernameError');
+});
+document.getElementById('id_password').addEventListener('input', function() {
+    const e = validateLoginPassword(this.value); if (e) showError('loginPasswordError', e); else clearError('loginPasswordError');
+});
+</script>
 {% endblock %}

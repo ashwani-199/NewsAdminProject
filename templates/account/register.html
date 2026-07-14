@@ -10,17 +10,54 @@
                 <h1 class="text-2xl font-bold">Create Account</h1>
                 <p class="text-gray-500 text-sm">Join NewsPortal today</p>
             </div>
-            <form method="post" class="space-y-4">
+            <form method="post" class="space-y-4" id="registerForm" novalidate>
                 {% csrf_token %}
-                {% for field in form %}
                 <div>
-                    <label class="block text-sm font-medium mb-1">{{ field.label }}</label>
-                    {{ field }}
-                    {% if field.errors %}
-                    <p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>
-                    {% endif %}
+                    <label class="block text-sm font-medium mb-1">Username</label>
+                    {{ form.username }}
+                    <p class="text-red-500 text-xs mt-1 hidden" id="regUsernameError"></p>
+                    <p class="text-green-500 text-xs mt-1 hidden" id="regUsernameSuccess"></p>
                 </div>
-                {% endfor %}
+                <div>
+                    <label class="block text-sm font-medium mb-1">Email</label>
+                    {{ form.email }}
+                    <p class="text-red-500 text-xs mt-1 hidden" id="regEmailError"></p>
+                    <p class="text-green-500 text-xs mt-1 hidden" id="regEmailSuccess"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Password</label>
+                    <div class="relative">
+                        {{ form.password1 }}
+                        <button type="button" onclick="toggleRegPassword('id_password1', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="flex gap-1 mt-2">
+                        <div id="str1" class="h-1 flex-1 rounded bg-gray-200"></div>
+                        <div id="str2" class="h-1 flex-1 rounded bg-gray-200"></div>
+                        <div id="str3" class="h-1 flex-1 rounded bg-gray-200"></div>
+                        <div id="str4" class="h-1 flex-1 rounded bg-gray-200"></div>
+                    </div>
+                    <p class="text-xs mt-1 hidden" id="regPasswordStrength"></p>
+                    <p class="text-red-500 text-xs mt-1 hidden" id="regPasswordError"></p>
+                    <ul class="text-xs text-gray-500 mt-1 space-y-0.5">
+                        <li id="pwLen"><i class="far fa-circle mr-1"></i>At least 8 characters</li>
+                        <li id="pwUpper"><i class="far fa-circle mr-1"></i>One uppercase letter</li>
+                        <li id="pwLower"><i class="far fa-circle mr-1"></i>One lowercase letter</li>
+                        <li id="pwNum"><i class="far fa-circle mr-1"></i>One number</li>
+                    </ul>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Confirm Password</label>
+                    <div class="relative">
+                        {{ form.password2 }}
+                        <button type="button" onclick="toggleRegPassword('id_password2', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <p class="text-red-500 text-xs mt-1 hidden" id="regConfirmError"></p>
+                    <p class="text-green-500 text-xs mt-1 hidden" id="regConfirmSuccess"></p>
+                </div>
                 <button type="submit" class="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 transition">
                     <i class="fas fa-user-plus mr-1"></i> Create Account
                 </button>
@@ -31,4 +68,82 @@
         </div>
     </div>
 </div>
+<script>
+function toggleRegPassword(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') { input.type = 'text'; icon.className = 'fas fa-eye-slash'; }
+    else { input.type = 'password'; icon.className = 'fas fa-eye'; }
+}
+function showError(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.classList.remove('hidden'); el.classList.add('text-red-500'); el.classList.remove('text-green-500'); }
+function showSuccess(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.classList.remove('hidden'); el.classList.add('text-green-500'); el.classList.remove('text-red-500'); }
+function clearMsg(id) { const el = document.getElementById(id); el.textContent = ''; el.classList.add('hidden'); }
+function setPwReq(id, met) { const el = document.getElementById(id); if (met) { el.querySelector('i').className = 'fas fa-check-circle mr-1 text-green-500'; } else { el.querySelector('i').className = 'far fa-circle mr-1'; } }
+
+function validateUsername(val) {
+    if (!val.trim()) return 'Username is required.';
+    if (val.length < 3) return 'Username must be at least 3 characters.';
+    if (val.length > 150) return 'Username must be 150 characters or fewer.';
+    const re = /^[a-zA-Z0-9@.+_-]+$/; if (!re.test(val)) return 'Letters, digits, and @/./+/-/_ only.';
+    return '';
+}
+function validateEmail(val) {
+    if (!val.trim()) return 'Email is required.';
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; if (!re.test(val)) return 'Enter a valid email address.';
+    return '';
+}
+function validatePassword(val) {
+    let score = 0;
+    if (val.length >= 8) score++; if (/[A-Z]/.test(val)) score++; if (/[a-z]/.test(val)) score++; if (/[0-9]/.test(val)) score++;
+    return score;
+}
+function updateStrength(score) {
+    const colors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500'];
+    const labels = ['Weak', 'Fair', 'Good', 'Strong'];
+    const el = document.getElementById('regPasswordStrength');
+    for (let i = 1; i <= 4; i++) { const bar = document.getElementById('str' + i); bar.className = 'h-1 flex-1 rounded ' + (i <= score ? colors[score - 1] : 'bg-gray-200'); }
+    if (score > 0) { el.textContent = labels[score - 1]; el.className = 'text-xs mt-1 text-' + (score <= 1 ? 'red' : score === 2 ? 'orange' : 'green') + '-500'; el.classList.remove('hidden'); }
+    else el.classList.add('hidden');
+}
+
+const pwInput = document.getElementById('id_password1');
+const userInput = document.getElementById('id_username');
+const emailInput = document.getElementById('id_email');
+const confirmInput = document.getElementById('id_password2');
+
+function checkPwReqs() { const v = pwInput.value; setPwReq('pwLen', v.length >= 8); setPwReq('pwUpper', /[A-Z]/.test(v)); setPwReq('pwLower', /[a-z]/.test(v)); setPwReq('pwNum', /[0-9]/.test(v)); }
+
+userInput.addEventListener('input', function() {
+    const e = validateUsername(this.value);
+    if (e) showError('regUsernameError', e), clearMsg('regUsernameSuccess');
+    else showSuccess('regUsernameSuccess', 'Username is available'), clearMsg('regUsernameError');
+});
+emailInput.addEventListener('input', function() {
+    const e = validateEmail(this.value);
+    if (e) showError('regEmailError', e), clearMsg('regEmailSuccess');
+    else showSuccess('regEmailSuccess', 'Valid email'), clearMsg('regEmailError');
+});
+pwInput.addEventListener('input', function() {
+    const score = validatePassword(this.value); updateStrength(score); checkPwReqs();
+    if (this.value.length > 0 && score < 2) showError('regPasswordError', 'Password is too weak.');
+    else clearMsg('regPasswordError');
+    if (confirmInput.value) { if (confirmInput.value !== this.value) showError('regConfirmError', 'Passwords do not match.'), clearMsg('regConfirmSuccess'); else showSuccess('regConfirmSuccess', 'Passwords match'), clearMsg('regConfirmError'); }
+});
+confirmInput.addEventListener('input', function() {
+    if (this.value !== pwInput.value) showError('regConfirmError', 'Passwords do not match.'), clearMsg('regConfirmSuccess');
+    else showSuccess('regConfirmSuccess', 'Passwords match'), clearMsg('regConfirmError');
+});
+
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    let valid = true;
+    const ue = validateUsername(userInput.value); const ee = validateEmail(emailInput.value);
+    const score = validatePassword(pwInput.value); const ce = pwInput.value !== confirmInput.value ? 'Passwords do not match.' : '';
+    if (!pwInput.value) { showError('regPasswordError', 'Password is required.'); valid = false; } else if (score < 2) { showError('regPasswordError', 'Password is too weak.'); valid = false; } else clearMsg('regPasswordError');
+    if (ue) showError('regUsernameError', ue); else clearMsg('regUsernameError');
+    if (ee) showError('regEmailError', ee); else clearMsg('regEmailError');
+    if (ce) showError('regConfirmError', ce); else clearMsg('regConfirmError');
+    if (ue || ee || ce || score < 2) e.preventDefault();
+});
+checkPwReqs();
+</script>
 {% endblock %}

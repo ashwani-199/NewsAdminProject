@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db.models import Count, Q
 from apps.news.models import Category, Article
 from apps.advertisements.models import Advertisement
@@ -20,9 +21,10 @@ def global_context(request):
 
     return {
         'nav_categories': categories,
-        'trending_news': trending,
+                'trending_news': trending,
         'breaking_news': breaking,
         'header_ad': header_ads,
         'sidebar_ads': sidebar_ads,
         'site_settings': site_settings,
+        'weather_api_key': getattr(settings, 'WEATHER_API_KEY', ''),
     }

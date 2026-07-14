@@ -6,16 +6,16 @@ from apps.accounts.models import User
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500'})
+        widget=forms.EmailInput(attrs={'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500', 'placeholder': 'you@example.com'})
     )
     username = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500'})
+        widget=forms.TextInput(attrs={'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500', 'placeholder': 'Choose a username'})
     )
     password1 = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500'})
+        widget=forms.PasswordInput(attrs={'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 pr-10', 'placeholder': 'Create a password'})
     )
     password2 = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500'})
+        widget=forms.PasswordInput(attrs={'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 pr-10', 'placeholder': 'Confirm your password'})
     )
 
     class Meta:

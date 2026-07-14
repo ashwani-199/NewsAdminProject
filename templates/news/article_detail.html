@@ -53,25 +53,26 @@
             {% endif %}
 
             <div class="flex items-center gap-2 mb-6 print:hidden">
-                <button @click="window.print()" class="flex items-center gap-1 px-3 py-1.5 border border-gray-300 rounded-lg text-sm hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <i class="fas fa-print"></i> Print
-                </button>
-                {% if user.is_authenticated %}
-                <button class="flex items-center gap-1 px-3 py-1.5 border rounded-lg text-sm like-btn" data-article-id="{{ article.pk }}">
-                    <i class="{% if user_liked %}fas text-red-500{% else %}far{% endif %} fa-heart"></i>
-                    <span class="like-count">{{ article.likes_count }}</span>
-                </button>
-                <button class="flex items-center gap-1 px-3 py-1.5 border rounded-lg text-sm bookmark-btn" data-article-id="{{ article.pk }}">
-                    <i class="{% if user_bookmarked %}fas text-yellow-500{% else %}far{% endif %} fa-bookmark"></i>
-                    <span>{% if user_bookmarked %}Saved{% else %}Save{% endif %}</span>
-                </button>
-                {% endif %}
-                <div class="flex items-center gap-1 ml-auto">
-                    <a href="#" class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm hover:bg-blue-700"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="w-8 h-8 bg-sky-500 text-white rounded-full flex items-center justify-center text-sm hover:bg-sky-600"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center text-sm hover:bg-green-700"><i class="fab fa-whatsapp"></i></a>
-                    <a href="#" class="w-8 h-8 bg-blue-700 text-white rounded-full flex items-center justify-center text-sm hover:bg-blue-800"><i class="fab fa-linkedin-in"></i></a>
+                <span class="text-sm font-medium text-gray-500"><i class="fas fa-share-alt mr-1"></i>Share:</span>
+                <div class="flex items-center gap-1">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm hover:bg-blue-700"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ article.title|urlencode }}" target="_blank" rel="noopener noreferrer" class="w-8 h-8 bg-sky-500 text-white rounded-full flex items-center justify-center text-sm hover:bg-sky-600"><i class="fab fa-twitter"></i></a>
+                    <a href="https://api.whatsapp.com/send?text={{ article.title|urlencode }}%20{{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" class="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center text-sm hover:bg-green-700"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" class="w-8 h-8 bg-blue-700 text-white rounded-full flex items-center justify-center text-sm hover:bg-blue-800"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://t.me/share/url?url={{ request.build_absolute_uri }}&text={{ article.title|urlencode }}" target="_blank" rel="noopener noreferrer" class="w-8 h-8 bg-blue-400 text-white rounded-full flex items-center justify-center text-sm hover:bg-blue-500"><i class="fab fa-telegram-plane"></i></a>
                 </div>
+                {% if user.is_authenticated %}
+                <div class="flex items-center gap-1 ml-auto">
+                    <button class="flex items-center gap-1 px-3 py-1.5 border rounded-lg text-sm like-btn" data-article-id="{{ article.pk }}">
+                        <i class="{% if user_liked %}fas text-red-500{% else %}far{% endif %} fa-heart"></i>
+                        <span class="like-count">{{ article.likes_count }}</span>
+                    </button>
+                    <button class="flex items-center gap-1 px-3 py-1.5 border rounded-lg text-sm bookmark-btn" data-article-id="{{ article.pk }}">
+                        <i class="{% if user_bookmarked %}fas text-yellow-500{% else %}far{% endif %} fa-bookmark"></i>
+                        <span>{% if user_bookmarked %}Saved{% else %}Save{% endif %}</span>
+                    </button>
+                </div>
+                {% endif %}
             </div>
 
             {% if article.summary %}
