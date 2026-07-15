@@ -2,7 +2,7 @@
     <div class="absolute inset-0 bg-black/50" @click="mobileMenu = false"></div>
     <div class="absolute left-0 top-0 bottom-0 w-72 bg-white dark:bg-gray-800 shadow-2xl overflow-y-auto">
         <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-            <span class="text-lg font-bold text-blue-600"><i class="fas fa-newspaper mr-2"></i>Menu</span>
+            <span class="text-lg font-bold text-blue-600"><i class="fas fa-newspaper mr-2"></i>{{ site_settings.site_name|default:"Menu" }}</span>
             <button @click="mobileMenu = false" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full">
                 <i class="fas fa-times"></i>
             </button>

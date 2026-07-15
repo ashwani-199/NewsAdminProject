@@ -7,12 +7,27 @@
         <div>
             <h1 class="text-3xl font-bold mb-4">Get in Touch</h1>
             <p class="text-gray-500 mb-6">Have a question, story tip, or feedback? We'd love to hear from you.</p>
-            <form method="post" class="space-y-4">
+            <form method="post" class="space-y-4" id="contactForm" novalidate>
                 {% csrf_token %}
-                <div><input type="text" name="name" placeholder="Your Name" required class="w-full px-4 py-3 border rounded-lg focus:border-blue-500 outline-none"></div>
-                <div><input type="email" name="email" placeholder="Your Email" required class="w-full px-4 py-3 border rounded-lg focus:border-blue-500 outline-none"></div>
-                <div><input type="text" name="subject" placeholder="Subject" required class="w-full px-4 py-3 border rounded-lg focus:border-blue-500 outline-none"></div>
-                <div><textarea name="message" rows="6" placeholder="Your Message" required class="w-full px-4 py-3 border rounded-lg focus:border-blue-500 outline-none"></textarea></div>
+                <div>
+                    <input type="text" name="name" id="contactName" placeholder="Your Name" required class="w-full px-4 py-3 border rounded-lg focus:border-blue-500 outline-none">
+                    <p class="text-red-500 text-xs mt-1 hidden" id="nameError"></p>
+                </div>
+                <div>
+                    <input type="email" name="email" id="contactEmail" placeholder="Your Email" required class="w-full px-4 py-3 border rounded-lg focus:border-blue-500 outline-none">
+                    <p class="text-red-500 text-xs mt-1 hidden" id="emailError"></p>
+                </div>
+                <div>
+                    <input type="text" name="subject" id="contactSubject" placeholder="Subject" required class="w-full px-4 py-3 border rounded-lg focus:border-blue-500 outline-none">
+                    <p class="text-red-500 text-xs mt-1 hidden" id="subjectError"></p>
+                </div>
+                <div>
+                    <textarea name="message" id="contactMessage" rows="6" placeholder="Your Message" required class="w-full px-4 py-3 border rounded-lg focus:border-blue-500 outline-none resize-none"></textarea>
+                    <div class="flex justify-between mt-1">
+                        <p class="text-red-500 text-xs hidden" id="messageError"></p>
+                        <p class="text-xs text-gray-400 ml-auto"><span id="charCount">0</span>/500</p>
+                    </div>
+                </div>
                 <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition">
                     <i class="fas fa-paper-plane mr-2"></i>Send Message
                 </button>
@@ -21,20 +36,62 @@
         <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm">
             <h2 class="text-xl font-bold mb-6">Contact Information</h2>
             <div class="space-y-4">
+                {% if site_settings.address %}
                 <div class="flex items-start gap-4">
                     <i class="fas fa-map-marker-alt text-blue-600 text-xl mt-1"></i>
-                    <div><h3 class="font-medium">Address</h3><p class="text-sm text-gray-500">123 News Street, Media City, NY 10001</p></div>
+                    <div><h3 class="font-medium">Address</h3><p class="text-sm text-gray-500">{{ site_settings.address }}</p></div>
                 </div>
+                {% endif %}
+                {% if site_settings.contact_email %}
                 <div class="flex items-start gap-4">
                     <i class="fas fa-envelope text-blue-600 text-xl mt-1"></i>
-                    <div><h3 class="font-medium">Email</h3><p class="text-sm text-gray-500">info@newsportal.com</p></div>
+                    <div><h3 class="font-medium">Email</h3><p class="text-sm text-gray-500">{{ site_settings.contact_email }}</p></div>
                 </div>
+                {% endif %}
+                {% if site_settings.contact_phone %}
                 <div class="flex items-start gap-4">
                     <i class="fas fa-phone text-blue-600 text-xl mt-1"></i>
-                    <div><h3 class="font-medium">Phone</h3><p class="text-sm text-gray-500">+1 (555) 123-4567</p></div>
+                    <div><h3 class="font-medium">Phone</h3><p class="text-sm text-gray-500">{{ site_settings.contact_phone }}</p></div>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
 </div>
+<script>
+function showError(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.classList.remove('hidden'); }
+function clearError(id) { const el = document.getElementById(id); el.textContent = ''; el.classList.add('hidden'); }
+function validateName(val) { if (!val.trim()) return 'Name is required.'; if (val.trim().length < 2) return 'Name must be at least 2 characters.'; return ''; }
+function validateEmail(val) { if (!val.trim()) return 'Email is required.'; const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; if (!re.test(val)) return 'Enter a valid email address.'; return ''; }
+function validateSubject(val) { if (!val.trim()) return 'Subject is required.'; if (val.trim().length < 3) return 'Subject must be at least 3 characters.'; return ''; }
+function validateMessage(val) { if (!val.trim()) return 'Message is required.'; if (val.trim().length < 10) return 'Message must be at least 10 characters.'; if (val.length > 500) return 'Message must be 500 characters or fewer.'; return ''; }
+
+const nameInput = document.getElementById('contactName');
+const emailInput = document.getElementById('contactEmail');
+const subjectInput = document.getElementById('contactSubject');
+const messageInput = document.getElementById('contactMessage');
+const charCount = document.getElementById('charCount');
+
+messageInput.addEventListener('input', function() {
+    charCount.textContent = this.value.length;
+    if (this.value.length > 500) charCount.classList.add('text-red-500');
+    else charCount.classList.remove('text-red-500');
+});
+
+nameInput.addEventListener('input', function() { const e = validateName(this.value); if (e) showError('nameError', e); else clearError('nameError'); });
+emailInput.addEventListener('input', function() { const e = validateEmail(this.value); if (e) showError('emailError', e); else clearError('emailError'); });
+subjectInput.addEventListener('input', function() { const e = validateSubject(this.value); if (e) showError('subjectError', e); else clearError('subjectError'); });
+messageInput.addEventListener('input', function() { const e = validateMessage(this.value); if (e) showError('messageError', e); else clearError('messageError'); });
+
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    let valid = true;
+    const ne = validateName(nameInput.value); const ee = validateEmail(emailInput.value);
+    const se = validateSubject(subjectInput.value); const me = validateMessage(messageInput.value);
+    if (ne) { showError('nameError', ne); valid = false; } else clearError('nameError');
+    if (ee) { showError('emailError', ee); valid = false; } else clearError('emailError');
+    if (se) { showError('subjectError', se); valid = false; } else clearError('subjectError');
+    if (me) { showError('messageError', me); valid = false; } else clearError('messageError');
+    if (!valid) e.preventDefault();
+});
+</script>
 {% endblock %}

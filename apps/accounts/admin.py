@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
-from apps.accounts.models import User, EmailVerification, PasswordReset
+from apps.accounts.models import User, EmailVerification, PasswordReset, AuthorIDCard
 
 
 @admin.register(User)
@@ -32,3 +32,22 @@ class PasswordResetAdmin(admin.ModelAdmin):
     list_display = ['user', 'token', 'created_at', 'expires_at', 'is_used']
     list_filter = ['is_used', 'created_at']
     search_fields = ['user__email', 'token']
+
+
+@admin.register(AuthorIDCard)
+class AuthorIDCardAdmin(admin.ModelAdmin):
+    list_display = ['card_id', 'user', 'status', 'requested_at', 'approved_at', 'approved_by', 'is_active']
+    list_filter = ['status', 'is_active', 'requested_at']
+    search_fields = ['card_id', 'user__username', 'user__email', 'user__first_name', 'user__last_name']
+    readonly_fields = ['card_id', 'requested_at', 'approved_at', 'approved_by']
+
+    def approve_id_card(self, request, queryset):
+        from django.utils import timezone
+        queryset.update(status='approved', approved_at=timezone.now(), approved_by=request.user)
+    approve_id_card.short_description = 'Approve selected ID cards'
+
+    def reject_id_card(self, request, queryset):
+        queryset.update(status='rejected')
+    reject_id_card.short_description = 'Reject selected ID cards'
+
+    actions = [approve_id_card, reject_id_card]

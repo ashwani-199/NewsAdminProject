@@ -14,9 +14,12 @@
     </div>
     <div class="container mx-auto px-4 py-3 flex items-center justify-between">
         <a href="{% url 'news:home' %}" class="flex items-center gap-2">
-            <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                <i class="fas fa-newspaper mr-1"></i>NewsPortal
-            </div>
+            {% if site_settings and site_settings.site_logo %}
+            <img src="{{ site_settings.site_logo.url }}" alt="{{ site_settings.site_name }}" class="h-10">
+            {% else %}
+            <i class="fas fa-newspaper text-2xl text-blue-600 dark:text-blue-400"></i>
+            {% endif %}
+            <span class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ site_settings.site_name|default:"NewsPortal" }}</span>
         </a>
         <div class="hidden lg:flex items-center gap-6">
             {% if header_ad and header_ad.is_valid %}

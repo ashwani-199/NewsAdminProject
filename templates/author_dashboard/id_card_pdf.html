@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 20mm;
+        }
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    {% with site_name=site_settings.site_name|default:"NewsPortal" %}
+    {% with full_name=user.get_full_name|default:user.username %}
+
+    <!-- HEADER -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="border: 2px solid #1a56db;">
+        <tr>
+            <td style="background: #1a56db; padding: 16px 28px;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="60" valign="middle">
+                            {% if logo_url %}
+                            <img src="{{ logo_url }}" width="48" height="48">
+                            {% endif %}
+                        </td>
+                        <td valign="middle">
+                            <font size="5" color="white"><b>{{ site_name }}</b></font><br>
+                            <font size="1" color="#bfdbfe">AUTHORIZATION CARD</font>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <!-- BODY -->
+        <tr>
+            <td style="padding: 22px 28px;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <!-- PHOTO -->
+                        <td width="140" valign="top">
+                            {% if avatar_url %}
+                            <img src="{{ avatar_url }}" width="120" height="140" style="border: 2px solid #1a56db;">
+                            {% else %}
+                            <table width="120" height="140" cellpadding="0" cellspacing="0" style="border: 2px solid #1a56db; background: #dbeafe;">
+                                <tr><td align="center"><font size="7" color="#1a56db"><b>{{ user.username|first|upper }}</b></font></td></tr>
+                            </table>
+                            {% endif %}
+                        </td>
+
+                        <!-- DETAILS -->
+                        <td valign="top" style="padding-left: 20px;">
+                            <font size="5" color="#111827"><b>{{ full_name }}</b></font><br>
+                            <font size="1" color="#6b7280">{{ user.get_role_display }}</font>
+
+                            <br><br>
+
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td width="80" style="padding: 4px 0;"><font size="1" color="#9ca3af">Name</font></td>
+                                    <td style="padding: 4px 0;"><font size="1"><b>{{ full_name }}</b></font></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 4px 0;"><font size="1" color="#9ca3af">Role</font></td>
+                                    <td style="padding: 4px 0;"><font size="1"><b>{{ user.get_role_display }}</b></font></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 4px 0;"><font size="1" color="#9ca3af">Card ID</font></td>
+                                    <td style="padding: 4px 0;"><font size="1" color="#1a56db"><b>{{ id_card.card_id }}</b></font></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 4px 0;"><font size="1" color="#9ca3af">Issued</font></td>
+                                    <td style="padding: 4px 0;"><font size="1"><b>{{ id_card.approved_at|date:"M d, Y" }}</b></font></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 4px 0;"><font size="1" color="#9ca3af">Valid Until</font></td>
+                                    <td style="padding: 4px 0;"><font size="1"><b>{{ id_card.expiry_date|date:"M d, Y" }}</b></font></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <!-- AUTHORIZATION -->
+        <tr>
+            <td style="padding: 0 28px 14px 28px;">
+                <table width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #e5e7eb; background: #f9fafb;">
+                    <tr>
+                        <td style="padding: 10px 16px;" align="center">
+                            <font size="1" color="#6b7280"><i>"Authorized to report and publish on behalf of <b color="#1a56db">{{ site_name }}</b>"</i></font>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <!-- FOOTER -->
+        <tr>
+            <td style="background: #1a56db; padding: 10px 28px;">
+                <font size="1" color="#bfdbfe">
+                    <b color="white">{{ site_name }}</b>
+                    {% if site_settings and site_settings.contact_email %} | {{ site_settings.contact_email }}{% endif %}
+                    {% if site_settings and site_settings.contact_phone %} | {{ site_settings.contact_phone }}{% endif %}
+                </font>
+            </td>
+        </tr>
+
+    </table>
+    {% endwith %}
+    {% endwith %}
+</body>
+</html>

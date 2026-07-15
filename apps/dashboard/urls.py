@@ -20,4 +20,8 @@ urlpatterns = [
     path('admin/messages/', views.AdminMessagesView.as_view(), name='admin_messages'),
     path('admin/settings/', views.AdminSettingsView.as_view(), name='admin_settings'),
     path('admin/contacts/', views.AdminContactMessagesView.as_view(), name='admin_contacts'),
+    path('author/id-card/', views.RequestIDCardView.as_view(), name='request_id_card'),
+    path('author/id-card/download/', views.DownloadIDCardView.as_view(), name='download_id_card'),
+    path('admin/id-cards/', views.AdminIDCardsView.as_view(), name='admin_id_cards'),
+    path('admin/id-cards/<int:pk>/action/', views.AdminApproveIDCardView.as_view(), name='admin_id_card_action'),
 ]

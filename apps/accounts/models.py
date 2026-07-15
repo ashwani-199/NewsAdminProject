@@ -84,3 +84,36 @@ class PasswordReset(models.Model):
 
     def __str__(self):
         return f'{self.user.email} - {self.token[:20]}...'
+
+
+class AuthorIDCard(models.Model):
+    STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    )
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='id_cards')
+    card_id = models.CharField(max_length=30, unique=True, editable=False)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    requested_at = models.DateTimeField(auto_now_add=True)
+    approved_at = models.DateTimeField(null=True, blank=True)
+    approved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_cards')
+    rejection_reason = models.TextField(blank=True)
+    expiry_date = models.DateField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = _('Author ID Card')
+        verbose_name_plural = _('Author ID Cards')
+        ordering = ['-requested_at']
+
+    def __str__(self):
+        return f'{self.card_id} - {self.user.get_full_name() or self.user.username}'
+
+    def save(self, *args, **kwargs):
+        if not self.card_id:
+            last = AuthorIDCard.objects.order_by('-id').first()
+            num = (last.id + 1) if last else 1
+            self.card_id = f'NP-JOURNALIST-{num:04d}'
+        super().save(*args, **kwargs)

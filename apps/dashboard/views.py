@@ -4,13 +4,15 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Count, Q, Sum
 from django.utils import timezone
+from django.http import HttpResponse
+from django.template.loader import render_to_string
 from apps.news.models import Article, Category, Like, Bookmark
 from apps.news.forms import ArticleForm
 from apps.comments.models import Comment
 from apps.notifications.models import Notification
 from apps.newsletter.models import Subscriber
 from apps.core.models import ContactMessage, WebsiteSettings
-from apps.accounts.models import User
+from apps.accounts.models import User, AuthorIDCard
 
 
 class AuthorRequiredMixin(UserPassesTestMixin):
@@ -237,3 +239,97 @@ class AdminSettingsView(LoginRequiredMixin, AdminRequiredMixin, View):
         settings.save()
         messages.success(request, 'Settings updated!')
         return redirect('dashboard:admin_settings')
+
+
+class RequestIDCardView(LoginRequiredMixin, AuthorRequiredMixin, View):
+    def get(self, request):
+        id_card = AuthorIDCard.objects.filter(user=request.user).first()
+        context = {'id_card': id_card}
+        return render(request, 'author_dashboard/id_card.html', context)
+
+    def post(self, request):
+        existing = AuthorIDCard.objects.filter(user=request.user, status='pending').exists()
+        if existing:
+            messages.warning(request, 'You already have a pending ID card request.')
+            return redirect('dashboard:request_id_card')
+        approved = AuthorIDCard.objects.filter(user=request.user, status='approved', is_active=True).exists()
+        if approved:
+            messages.warning(request, 'You already have an active ID card.')
+            return redirect('dashboard:request_id_card')
+        AuthorIDCard.objects.create(user=request.user)
+        messages.success(request, 'ID card request submitted! Waiting for admin approval.')
+        return redirect('dashboard:request_id_card')
+
+
+class DownloadIDCardView(LoginRequiredMixin, AuthorRequiredMixin, View):
+    def get(self, request):
+        id_card = AuthorIDCard.objects.filter(user=request.user, status='approved', is_active=True).first()
+        if not id_card:
+            messages.error(request, 'No approved ID card found.')
+            return redirect('dashboard:request_id_card')
+        settings = WebsiteSettings.objects.first()
+        avatar_url = ''
+        if request.user.avatar:
+            avatar_url = request.build_absolute_uri(request.user.avatar.url)
+        logo_url = ''
+        if settings and settings.site_logo:
+            logo_url = request.build_absolute_uri(settings.site_logo.url)
+        html_string = render_to_string('author_dashboard/id_card_pdf.html', {
+            'id_card': id_card,
+            'user': request.user,
+            'site_settings': settings,
+            'avatar_url': avatar_url,
+            'logo_url': logo_url,
+            'request': request,
+        })
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="IDCard_{id_card.card_id}.pdf"'
+        from xhtml2pdf import pisa
+        pisa_status = pisa.CreatePDF(html_string, dest=response)
+        if pisa_status.err:
+            return HttpResponse('Error generating PDF', status=500)
+        return response
+
+
+class AdminApproveIDCardView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        if not (request.user.is_staff or request.user.role == 'administrator'):
+            messages.error(request, 'Permission denied.')
+            return redirect('dashboard:admin_dashboard')
+        id_card = get_object_or_404(AuthorIDCard, pk=pk)
+        action = request.POST.get('action')
+        if action == 'approve':
+            from datetime import timedelta
+            id_card.status = 'approved'
+            id_card.approved_at = timezone.now()
+            id_card.approved_by = request.user
+            id_card.expiry_date = (timezone.now() + timedelta(days=365)).date()
+            id_card.save()
+            messages.success(request, f'ID card {id_card.card_id} approved.')
+        elif action == 'reject':
+            id_card.status = 'rejected'
+            id_card.rejection_reason = request.POST.get('reason', '')
+            id_card.save()
+            messages.success(request, f'ID card {id_card.card_id} rejected.')
+        elif action == 'revoke':
+            id_card.is_active = False
+            id_card.save()
+            messages.success(request, f'ID card {id_card.card_id} revoked.')
+        return redirect('dashboard:admin_id_cards')
+
+
+class AdminIDCardsView(LoginRequiredMixin, View):
+    def get(self, request):
+        if not (request.user.is_staff or request.user.role == 'administrator'):
+            messages.error(request, 'Permission denied.')
+            return redirect('dashboard:admin_dashboard')
+        status = request.GET.get('status', '')
+        id_cards = AuthorIDCard.objects.select_related('user', 'approved_by').all()
+        if status:
+            id_cards = id_cards.filter(status=status)
+        context = {
+            'id_cards': id_cards,
+            'current_status': status,
+            'pending_count': AuthorIDCard.objects.filter(status='pending').count(),
+        }
+        return render(request, 'admin_dashboard/id_cards.html', context)

@@ -26,6 +26,10 @@
     }
     </script>
     <title>{% block title %}News Portal{% endblock %}</title>
+    {% if site_settings and site_settings.site_favicon %}
+    <link rel="icon" href="{{ site_settings.site_favicon.url }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ site_settings.site_favicon.url }}" type="image/x-icon">
+    {% endif %}
     <script>
         if (localStorage.getItem('darkMode') === 'true') {
             document.documentElement.classList.add('dark');

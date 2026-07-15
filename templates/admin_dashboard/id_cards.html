@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}Manage ID Cards - Admin{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold"><i class="fas fa-id-card text-blue-600 mr-2"></i>Author ID Cards</h1>
+        <div class="flex gap-2">
+            <a href="?status=pending" class="px-3 py-1.5 rounded-lg text-sm {% if current_status == 'pending' %}bg-yellow-500 text-white{% else %}bg-gray-100 dark:bg-gray-700 hover:bg-gray-200{% endif %}">Pending {% if pending_count %}<span class="ml-1 bg-red-500 text-white text-xs px-1.5 rounded-full">{{ pending_count }}</span>{% endif %}</a>
+            <a href="?status=approved" class="px-3 py-1.5 rounded-lg text-sm {% if current_status == 'approved' %}bg-green-500 text-white{% else %}bg-gray-100 dark:bg-gray-700 hover:bg-gray-200{% endif %}">Approved</a>
+            <a href="?status=rejected" class="px-3 py-1.5 rounded-lg text-sm {% if current_status == 'rejected' %}bg-red-500 text-white{% else %}bg-gray-100 dark:bg-gray-700 hover:bg-gray-200{% endif %}">Rejected</a>
+            <a href="?" class="px-3 py-1.5 rounded-lg text-sm {% if not current_status %}bg-blue-600 text-white{% else %}bg-gray-100 dark:bg-gray-700 hover:bg-gray-200{% endif %}">All</a>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 dark:bg-gray-700">
+                    <tr>
+                        <th class="text-left px-4 py-3 font-medium">Card ID</th>
+                        <th class="text-left px-4 py-3 font-medium">Author</th>
+                        <th class="text-left px-4 py-3 font-medium">Status</th>
+                        <th class="text-left px-4 py-3 font-medium">Requested</th>
+                        <th class="text-left px-4 py-3 font-medium">Approved</th>
+                        <th class="text-left px-4 py-3 font-medium">Valid Until</th>
+                        <th class="text-left px-4 py-3 font-medium">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                    {% for card in id_cards %}
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                        <td class="px-4 py-3 font-mono text-xs font-medium">{{ card.card_id }}</td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center gap-2">
+                                {% if card.user.avatar %}
+                                <img src="{{ card.user.avatar.url }}" class="w-8 h-8 rounded-full object-cover">
+                                {% else %}
+                                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold">{{ card.user.username|first|upper }}</div>
+                                {% endif %}
+                                <div>
+                                    <p class="font-medium">{{ card.user.get_full_name|default:card.user.username }}</p>
+                                    <p class="text-xs text-gray-500">{{ card.user.email }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            {% if card.status == 'pending' %}
+                            <span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded text-xs font-medium">Pending</span>
+                            {% elif card.status == 'approved' %}
+                            <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs font-medium">Approved</span>
+                            {% else %}
+                            <span class="px-2 py-0.5 bg-red-100 text-red-700 rounded text-xs font-medium">Rejected</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-3 text-gray-500">{{ card.requested_at|date:"M d, Y" }}</td>
+                        <td class="px-4 py-3 text-gray-500">{% if card.approved_at %}{{ card.approved_at|date:"M d, Y" }}{% else %}-{% endif %}</td>
+                        <td class="px-4 py-3 text-gray-500">{% if card.expiry_date %}{{ card.expiry_date|date:"M d, Y" }}{% else %}-{% endif %}</td>
+                        <td class="px-4 py-3">
+                            {% if card.status == 'pending' %}
+                            <div class="flex items-center gap-1">
+                                <form method="post" action="{% url 'dashboard:admin_id_card_action' card.pk %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="approve">
+                                    <button type="submit" class="px-2 py-1 bg-green-500 text-white rounded text-xs hover:bg-green-600"><i class="fas fa-check"></i> Approve</button>
+                                </form>
+                                <button onclick="document.getElementById('reject-{{ card.pk }}').classList.toggle('hidden')" class="px-2 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600"><i class="fas fa-times"></i> Reject</button>
+                            </div>
+                            <div id="reject-{{ card.pk }}" class="hidden mt-2">
+                                <form method="post" action="{% url 'dashboard:admin_id_card_action' card.pk %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="reject">
+                                    <input type="text" name="reason" placeholder="Rejection reason" class="w-full px-2 py-1 border rounded text-xs mb-1">
+                                    <button type="submit" class="px-2 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600 w-full">Submit Rejection</button>
+                                </form>
+                            </div>
+                            {% elif card.status == 'approved' %}
+                            <form method="post" action="{% url 'dashboard:admin_id_card_action' card.pk %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="revoke">
+                                <button type="submit" class="px-2 py-1 bg-orange-500 text-white rounded text-xs hover:bg-orange-600"><i class="fas fa-ban"></i> Revoke</button>
+                            </form>
+                            {% else %}
+                            <span class="text-gray-400 text-xs">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="px-4 py-8 text-center text-gray-500">No ID card requests found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
