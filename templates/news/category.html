@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}{{ category.name }} - NewsPortal{% endblock %}
+{% block title %}{{ category.name }} - {{ site_settings.site_name|default:"Bhartiya Janta News" }}{% endblock %}
 {% block meta_description %}{{ category.meta_description|default:'Latest news in '|add:category.name }}{% endblock %}
 
 {% block content %}

@@ -3,29 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{% block meta_description %}News Portal - Your trusted source for latest news{% endblock %}">
-    <meta name="keywords" content="{% block meta_keywords %}news, breaking news, latest news{% endblock %}">
-    <meta property="og:title" content="{% block og_title %}News Portal{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}Your trusted source for latest news{% endblock %}">
-    <meta property="og:image" content="{% block og_image %}{% if site_settings and site_settings.site_logo %}{{ site_settings.site_logo.url }}{% endif %}{% endblock %}">
+    <meta name="description" content="{% block meta_description %}{{ site_settings.meta_description|default:'' }}{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}{{ site_settings.meta_keywords|default:'' }}{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}{{ site_settings.meta_title|default:site_settings.site_name|default:'' }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ site_settings.meta_description|default:'' }}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{% if site_settings and site_settings.site_logo %}{{ request.scheme }}://{{ request.get_host }}{{ site_settings.site_logo.url }}{% endif %}{% endblock %}">
     <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{% block twitter_title %}News Portal{% endblock %}">
-    <meta name="twitter:description" content="{% block twitter_description %}Your trusted source for latest news{% endblock %}">
+    <meta name="twitter:title" content="{% block twitter_title %}{{ site_settings.meta_title|default:site_settings.site_name|default:'' }}{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}{{ site_settings.meta_description|default:'' }}{% endblock %}">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "NewsArticle",
-        "headline": "{% block schema_headline %}News Portal{% endblock %}",
+        "headline": "{% block schema_headline %}{% endblock %}",
         "datePublished": "{% block schema_date %}{% endblock %}",
         "author": {
             "@type": "Person",
-            "name": "{% block schema_author %}News Portal{% endblock %}"
+            "name": "{% block schema_author %}{% endblock %}"
         }
     }
     </script>
-    <title>{% block title %}News Portal{% endblock %}</title>
+    <title>{% block title %}{{ site_settings.meta_title|default:site_settings.site_name|default:"News Portal" }}{% endblock %}</title>
     {% if site_settings and site_settings.site_favicon %}
     <link rel="icon" href="{{ site_settings.site_favicon.url }}" type="image/x-icon">
     <link rel="shortcut icon" href="{{ site_settings.site_favicon.url }}" type="image/x-icon">

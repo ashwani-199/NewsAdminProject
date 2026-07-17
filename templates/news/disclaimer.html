@@ -1,13 +1,73 @@
 {% extends 'base.html' %}
-{% block title %}Disclaimer - NewsPortal{% endblock %}
+{% block title %}Disclaimer - {{ site_settings.site_name|default:"Bhartiya Janta News" }}{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-12 max-w-3xl">
-    <h1 class="text-3xl font-bold mb-6">Disclaimer</h1>
-    <div class="prose dark:prose-invert max-w-none">
-        <p>The information provided on NewsPortal is for general informational purposes only. While we strive to keep the information accurate and up-to-date, we make no representations or warranties of any kind.</p>
-        <p>NewsPortal is not responsible for any errors or omissions, or for the results obtained from the use of this information.</p>
-        <p>External links are provided for convenience and do not signify endorsement.</p>
+    <h1 class="text-3xl font-bold mb-2">Disclaimer</h1>
+    <p class="text-sm text-gray-500 mb-8">Effective Date: January 1, 2025 &nbsp;|&nbsp; Last Updated: {% now "F d, Y" %}</p>
+    <div class="prose dark:prose-invert max-w-none space-y-6">
+
+        <p>The information provided on Bhartiya Janta News is for general informational and educational purposes only. By using our website, you acknowledge and agree to the following disclaimers.</p>
+
+        <h2>1. News Accuracy</h2>
+        <p>While Bhartiya Janta News strives to provide accurate, timely, and reliable news coverage, we cannot guarantee the completeness or accuracy of all information published. News is subject to change as events unfold and new information becomes available. We encourage readers to verify critical information from official and primary sources.</p>
+
+        <h2>2. Editorial Independence</h2>
+        <p>Bhartiya Janta News is committed to fair and impartial journalism. Opinions expressed in editorials, op-eds, and commentary sections are those of the respective authors and do not necessarily reflect the views of Bhartiya Janta News as an organization.</p>
+
+        <h2>3. No Professional Advice</h2>
+        <p>Content published on Bhartiya Janta News does not constitute professional advice of any kind, including but not limited to:</p>
+        <ul>
+            <li>Legal advice</li>
+            <li>Financial or investment advice</li>
+            <li>Medical or health advice</li>
+            <li>Technical or cybersecurity advice</li>
+        </ul>
+        <p>Always consult qualified professionals for advice specific to your situation.</p>
+
+        <h2>4. External Links</h2>
+        <p>Bhartiya Janta News may contain links to third-party websites for reference and reader convenience. We do not endorse, control, or assume responsibility for the content, privacy policies, or practices of any external sites. Accessing external links is at your own risk.</p>
+
+        <h2>5. User-Generated Content</h2>
+        <p>Comments, opinions, and other content submitted by users are the views of their respective authors. Bhartiya Janta News does not endorse user-generated content and is not responsible for any statements made by users on our platform.</p>
+
+        <h2>6. Advertising Disclaimer</h2>
+        <p>Bhartiya Janta News may display advertisements and sponsored content. The presence of advertisements does not constitute an endorsement of the advertised products or services. Advertisers are solely responsible for the accuracy of their claims.</p>
+
+        <h2>7. Copyright and Fair Use</h2>
+        <p>All original content on Bhartiya Janta News is protected under the Copyright Act, 1957 (India) and applicable international laws. Reproduction or redistribution of content without prior written permission is strictly prohibited, except as permitted under fair use provisions for personal and non-commercial purposes with proper attribution.</p>
+
+        <h2>8. Technical Availability</h2>
+        <p>We endeavor to keep Bhartiya Janta News available at all times. However, we do not guarantee uninterrupted or error-free access to our website. We may temporarily suspend access for maintenance, updates, or circumstances beyond our control.</p>
+
+        <h2>9. Limitation of Liability</h2>
+        <p>Bhartiya Janta News, its editors, journalists, contributors, and affiliates shall not be held liable for any direct, indirect, incidental, or consequential damages arising from:</p>
+        <ul>
+            <li>Use of or reliance on information published on this platform</li>
+            <li>Errors, inaccuracies, or omissions in published content</li>
+            <li>Any decisions made based on the information provided</li>
+            <li>Unauthorized access to or alteration of your data</li>
+        </ul>
+
+        <h2>10. Indian Laws and Regulations</h2>
+        <p>All content published on Bhartiya Janta News is in compliance with applicable Indian laws, including but not limited to:</p>
+        <ul>
+            <li>Information Technology Act, 2000</li>
+            <li>Indian Penal Code, 1860</li>
+            <li>Press and Registration of Books Act, 1867</li>
+            <li>Contempt of Courts Act, 1971</li>
+        </ul>
+
+        <h2>11. Changes to This Disclaimer</h2>
+        <p>We reserve the right to update or modify this Disclaimer at any time without prior notice. Changes will be effective immediately upon posting on this page. Please check this page periodically for updates.</p>
+
+        <h2>12. Contact Us</h2>
+        <p>If you have any questions about this Disclaimer, please contact us:</p>
+        <ul>
+            <li>Email: <a href="mailto:{{ site_settings.contact_email|default:'disclaimer@bhartiyajantanews.com' }}">{{ site_settings.contact_email|default:"disclaimer@bhartiyajantanews.com" }}</a></li>
+            <li>Phone: {{ site_settings.contact_phone|default:"+91-XXXXXXXXXX" }}</li>
+            <li>Address: {{ site_settings.address|default:"India" }}</li>
+        </ul>
     </div>
 </div>
 {% endblock %}

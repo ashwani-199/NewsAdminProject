@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}News Portal - Latest News, Breaking Stories & Updates{% endblock %}
+{% block title %}{{ site_settings.meta_title|default:"Bhartiya Janta News" }} - {{ site_settings.site_tagline|default:"Latest News, Breaking Stories & Updates" }}{% endblock %}
+{% block meta_description %}{{ site_settings.meta_description|default:"Stay updated with the latest news, breaking stories, and in-depth coverage from Bhartiya Janta News." }}{% endblock %}
+{% block meta_keywords %}{{ site_settings.meta_keywords|default:"news, breaking news, latest news, india news, bhartiya janta news" }}{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-6">

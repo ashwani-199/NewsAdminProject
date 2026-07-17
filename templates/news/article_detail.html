@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}{{ article.meta_title|default:article.title }} - NewsPortal{% endblock %}
+{% block title %}{{ article.meta_title|default:article.title }} - {{ site_settings.site_name|default:"Bhartiya Janta News" }}{% endblock %}
 {% block meta_description %}{{ article.meta_description|default:article.summary }}{% endblock %}
 {% block meta_keywords %}{{ article.meta_keywords }}{% endblock %}
 {% block og_title %}{{ article.title }}{% endblock %}

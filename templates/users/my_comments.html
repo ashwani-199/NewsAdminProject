@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}My Comments - NewsPortal{% endblock %}
+{% block title %}My Comments - {{ site_settings.site_name|default:"Bhartiya Janta News" }}{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-6 max-w-4xl">

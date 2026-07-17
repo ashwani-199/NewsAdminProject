@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}{{ author.get_full_name|default:author.username }} - Author - NewsPortal{% endblock %}
+{% block title %}{{ author.get_full_name|default:author.username }} - Author - {{ site_settings.site_name|default:"Bhartiya Janta News" }}{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-6">

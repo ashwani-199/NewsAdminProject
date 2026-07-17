@@ -1,17 +1,92 @@
 {% extends 'base.html' %}
-{% block title %}About Us - NewsPortal{% endblock %}
+{% block title %}About Us - {{ site_settings.site_name|default:"Bhartiya Janta News" }}{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-12">
     <div class="max-w-3xl mx-auto">
-        <h1 class="text-3xl font-bold mb-6">About NewsPortal</h1>
-        <div class="prose dark:prose-invert max-w-none">
-            <p class="text-lg leading-relaxed">Welcome to NewsPortal, your trusted source for the latest news, breaking stories, and in-depth coverage from around the world.</p>
-            <p>Our mission is to deliver accurate, timely, and unbiased news to our readers. We cover a wide range of topics including politics, technology, business, sports, entertainment, health, science, education, lifestyle, and world news.</p>
+        <h1 class="text-3xl font-bold mb-2">About {{ site_settings.site_name|default:"Bhartiya Janta News" }}</h1>
+        <p class="text-sm text-gray-500 mb-8">Delivering Truth. Empowering Citizens.</p>
+        <div class="prose dark:prose-invert max-w-none space-y-6">
+
+            <p class="text-lg leading-relaxed">Welcome to {{ site_settings.site_name|default:"Bhartiya Janta News" }} — a trusted name in Indian journalism, committed to delivering accurate, timely, and impartial news to millions of readers across the nation and beyond.</p>
+
+            <h2>Our Story</h2>
+            <p>{{ site_settings.site_name|default:"Bhartiya Janta News" }} was founded with a singular vision — to create a news platform that puts the people first. In an era of misinformation and sensationalism, we believe that responsible journalism is the cornerstone of a healthy democracy. Since our inception, we have worked tirelessly to build a newsroom that values truth over clicks and substance over sensation.</p>
+
+            <h2>Our Mission</h2>
+            <p>To inform, educate, and empower every citizen of India with reliable and unbiased news coverage. We strive to give a voice to the voiceless, hold those in power accountable, and shine a light on the stories that matter most to the people of India.</p>
+
+            <h2>Our Vision</h2>
+            <p>To become India's most trusted and people-centric news platform — one that serves as a bridge between the government and the governed, fostering informed dialogue and strengthening the democratic fabric of our nation.</p>
+
+            <h2>What We Cover</h2>
+            <p>We provide comprehensive coverage across a wide range of topics that matter to everyday Indians:</p>
+            <ul>
+                <li><strong>National News</strong> — Political developments, government policies, parliamentary proceedings, and civic issues from every corner of India</li>
+                <li><strong>State & Local News</strong> — In-depth reporting from states, districts, and villages that mainstream media often overlooks</li>
+                <li><strong>World News</strong> — International affairs, diplomatic relations, and global events with an Indian perspective</li>
+                <li><strong>Business & Economy</strong> — Market updates, industry news, startup stories, and economic policies that impact your livelihood</li>
+                <li><strong>Technology</strong> — Digital India initiatives, startup ecosystem, gadgets, and the evolving tech landscape</li>
+                <li><strong>Sports</strong> — Cricket, kabaddi, football, Olympics, and all Indian sports achievements</li>
+                <li><strong>Entertainment</strong> — Bollywood, regional cinema, OTT platforms, and cultural events</li>
+                <li><strong>Education</strong> — Board results, competitive exams, policy changes, and opportunities for students</li>
+                <li><strong>Health</strong> — Public health updates, medical research, wellness tips, and healthcare accessibility</li>
+                <li><strong>Agriculture & Rural</strong> — Farming policies, rural development, mandi prices, and stories from India's heartland</li>
+            </ul>
+
+            <h2>Our Editorial Values</h2>
+            <ul>
+                <li><strong>Accuracy</strong> — Every story is thoroughly fact-checked before publication. We correct errors promptly and transparently.</li>
+                <li><strong>Fairness</strong> — We present all sides of a story without bias, allowing readers to form their own opinions.</li>
+                <li><strong>Independence</strong> — Our editorial decisions are free from political, corporate, or commercial influence.</li>
+                <li><strong>Accountability</strong> — We take responsibility for our journalism and welcome scrutiny from our readers.</li>
+                <li><strong>Empathy</strong> — We report with sensitivity, respecting the dignity and privacy of individuals affected by events.</li>
+            </ul>
+
             <h2>Our Team</h2>
-            <p>Our team of experienced journalists and editors work around the clock to bring you the most important stories. We are committed to journalistic integrity and excellence.</p>
-            <h2>Contact Us</h2>
-            <p>Have a story tip or feedback? We'd love to hear from you. Visit our <a href="{% url 'news:contact' %}" class="text-blue-600 hover:underline">Contact page</a> to get in touch.</p>
+            <p>Behind {{ site_settings.site_name|default:"Bhartiya Janta News" }} is a dedicated team of experienced journalists, editors, researchers, and digital professionals who work around the clock — often in challenging conditions — to bring you the most important stories. Our newsroom operates on the principles of collaborative journalism, where every voice matters and every perspective counts.</p>
+            <p>Our reporters are stationed across India, from the corridors of power in Delhi to the grassroots in rural India, ensuring that no story goes untold.</p>
+
+            <h2>Community & Reader Engagement</h2>
+            <p>We believe journalism is a two-way conversation. Our platform encourages reader participation through:</p>
+            <ul>
+                <li>Comment sections and opinion pieces</li>
+                <li>Reader-submitted stories and citizen journalism</li>
+                <li>Interactive polls and surveys on trending issues</li>
+                <li>Social media engagement across all major platforms</li>
+                <li>Regular town halls and community discussions</li>
+            </ul>
+
+            <h2>Our Commitment to You</h2>
+            <p>In a world overwhelmed by information overload, {{ site_settings.site_name|default:"Bhartiya Janta News" }} is committed to being your reliable compass. We promise to:</p>
+            <ul>
+                <li>Never compromise on the truth</li>
+                <li>Give a platform to stories that deserve to be heard</li>
+                <li>Protect the privacy and safety of our sources</li>
+                <li>Continue innovating to deliver news the way you want it</li>
+                <li>Stay accessible to every Indian, regardless of background</li>
+            </ul>
+
+            <h2>Get In Touch</h2>
+            <p>We value your feedback, story tips, and suggestions. Whether you have a news tip, a complaint, or simply want to say hello — we are here to listen.</p>
+            <ul>
+                <li>Email: <a href="mailto:{{ site_settings.contact_email|default:'info@bhartiyajantanews.com' }}">{{ site_settings.contact_email|default:"info@bhartiyajantanews.com" }}</a></li>
+                <li>Phone: {{ site_settings.contact_phone|default:"+91-XXXXXXXXXX" }}</li>
+                <li>Address: {{ site_settings.address|default:"India" }}</li>
+            </ul>
+            <p>Visit our <a href="{% url 'news:contact' %}" class="text-blue-600 hover:underline">Contact page</a> to send us a message directly.</p>
+
+            <h2>Follow Us</h2>
+            <p>Stay connected with {{ site_settings.site_name|default:"Bhartiya Janta News" }} on social media for real-time updates:</p>
+            <div class="flex gap-4 mt-3">
+                {% if site_settings and site_settings.facebook_url %}<a href="{{ site_settings.facebook_url }}" target="_blank" class="text-blue-600 hover:underline">Facebook</a>{% endif %}
+                {% if site_settings and site_settings.twitter_url %}<a href="{{ site_settings.twitter_url }}" target="_blank" class="text-blue-400 hover:underline">Twitter / X</a>{% endif %}
+                {% if site_settings and site_settings.instagram_url %}<a href="{{ site_settings.instagram_url }}" target="_blank" class="text-pink-600 hover:underline">Instagram</a>{% endif %}
+                {% if site_settings and site_settings.youtube_url %}<a href="{{ site_settings.youtube_url }}" target="_blank" class="text-red-600 hover:underline">YouTube</a>{% endif %}
+                {% if site_settings and site_settings.telegram_url %}<a href="{{ site_settings.telegram_url }}" target="_blank" class="text-blue-500 hover:underline">Telegram</a>{% endif %}
+                {% if site_settings and site_settings.whatsapp_number %}<a href="https://wa.me/{{ site_settings.whatsapp_number }}" target="_blank" class="text-green-600 hover:underline">WhatsApp</a>{% endif %}
+            </div>
+
         </div>
     </div>
 </div>

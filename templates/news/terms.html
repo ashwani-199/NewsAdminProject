@@ -1,17 +1,89 @@
 {% extends 'base.html' %}
-{% block title %}Terms & Conditions - NewsPortal{% endblock %}
+{% block title %}Terms & Conditions - {{ site_settings.site_name|default:"Bhartiya Janta News" }}{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-12 max-w-3xl">
-    <h1 class="text-3xl font-bold mb-6">Terms & Conditions</h1>
-    <div class="prose dark:prose-invert max-w-none">
-        <p>By accessing and using NewsPortal, you agree to these terms and conditions.</p>
-        <h2>Use License</h2>
-        <p>Permission is granted to temporarily access the materials on NewsPortal for personal, non-commercial use only.</p>
-        <h2>Content</h2>
-        <p>All content published on NewsPortal is for informational purposes only. We reserve the right to modify or remove content at any time.</p>
-        <h2>User Accounts</h2>
-        <p>You are responsible for maintaining the confidentiality of your account and password.</p>
+    <h1 class="text-3xl font-bold mb-2">Terms & Conditions</h1>
+    <p class="text-sm text-gray-500 mb-8">Effective Date: January 1, 2025 &nbsp;|&nbsp; Last Updated: {% now "F d, Y" %}</p>
+    <div class="prose dark:prose-invert max-w-none space-y-6">
+
+        <p>Welcome to Bhartiya Janta News. By accessing or using our website and services, you agree to be bound by these Terms & Conditions. Please read them carefully before using our platform.</p>
+
+        <h2>1. Acceptance of Terms</h2>
+        <p>By visiting, browsing, or using Bhartiya Janta News (including all subdomains, mobile versions, and applications), you acknowledge that you have read, understood, and agree to these Terms & Conditions and our <a href="{% url 'news:privacy_policy' %}">Privacy Policy</a>.</p>
+
+        <h2>2. Use of Content</h2>
+        <h3>Our Content</h3>
+        <p>All articles, images, videos, graphics, logos, and other materials published on Bhartiya Janta News are protected under Indian copyright laws and international treaties. You may:</p>
+        <ul>
+            <li>Read and share our articles for personal, non-commercial purposes with proper attribution</li>
+            <li>Share links to our articles on social media platforms</li>
+        </ul>
+        <p>You may NOT:</p>
+        <ul>
+            <li>Reproduce, republish, or redistribute our content for commercial purposes without written permission</li>
+            <li>Modify, adapt, or create derivative works from our content</li>
+            <li>Use our content to misrepresent facts or spread misinformation</li>
+            <li>Scrape, crawl, or use automated tools to extract content from our website</li>
+        </ul>
+
+        <h2>3. User Accounts and Registration</h2>
+        <ul>
+            <li>You must be at least 13 years old to create an account</li>
+            <li>You are responsible for maintaining the confidentiality of your login credentials</li>
+            <li>You are responsible for all activities that occur under your account</li>
+            <li>You must provide accurate, current, and complete information during registration</li>
+            <li>We reserve the right to suspend or terminate accounts that violate these terms</li>
+        </ul>
+
+        <h2>4. User-Generated Content</h2>
+        <p>If you submit comments, articles, feedback, or any other content to Bhartiya Janta News:</p>
+        <ul>
+            <li>You grant us a non-exclusive, royalty-free, perpetual license to use, display, and distribute your content</li>
+            <li>You represent that you own or have the necessary rights to the content you submit</li>
+            <li>You agree not to submit content that is defamatory, obscene, abusive, or violates any law</li>
+            <li>We reserve the right to moderate, edit, or remove user-generated content at our discretion</li>
+        </ul>
+
+        <h2>5. Journalist and Contributor Responsibilities</h2>
+        <ul>
+            <li>Journalists must verify facts and sources before publishing content</li>
+            <li>Content must comply with the Press Council of India guidelines and applicable media laws</li>
+            <li>Plagiarism and fabrication of news are strictly prohibited</li>
+            <li>Conflicts of interest must be disclosed to the editorial team</li>
+        </ul>
+
+        <h2>6. Advertising and Sponsored Content</h2>
+        <p>Bhartiya Janta News may display advertisements and sponsored content. All sponsored or paid content will be clearly labeled as such. We are not responsible for the claims made in advertisements.</p>
+
+        <h2>7. Intellectual Property</h2>
+        <p>All trademarks, service marks, trade names, logos, and other intellectual property displayed on Bhartiya Janta News are the property of their respective owners. Use of any such intellectual property without express written permission is prohibited.</p>
+
+        <h2>8. Limitation of Liability</h2>
+        <p>Bhartiya Janta News and its team shall not be held liable for:</p>
+        <ul>
+            <li>Any inaccuracies, errors, or omissions in published content</li>
+            <li>Any damages arising from the use of or inability to use our platform</li>
+            <li>Any loss of data or revenue resulting from the use of our services</li>
+            <li>The actions or content of third-party websites linked from our platform</li>
+        </ul>
+
+        <h2>9. Indemnification</h2>
+        <p>You agree to indemnify and hold harmless Bhartiya Janta News, its editors, journalists, and affiliates from any claims, losses, or damages arising from your use of the platform or violation of these terms.</p>
+
+        <h2>10. Governing Law and Jurisdiction</h2>
+        <p>These Terms & Conditions are governed by the laws of India. Any disputes shall be subject to the exclusive jurisdiction of the courts in India.</p>
+
+        <h2>11. Amendments</h2>
+        <p>We reserve the right to modify these Terms & Conditions at any time. Updates will be posted on this page with a revised effective date. Your continued use of the platform after changes are posted constitutes acceptance of the updated terms.</p>
+
+        <h2>12. Contact Us</h2>
+        <p>For any questions about these Terms & Conditions, please contact us:</p>
+        <ul>
+            <li>Email: <a href="mailto:{{ site_settings.contact_email|default:'legal@bhartiyajantanews.com' }}">{{ site_settings.contact_email|default:"legal@bhartiyajantanews.com" }}</a></li>
+            <li>Phone: {{ site_settings.contact_phone|default:"+91-XXXXXXXXXX" }}</li>
+            <li>Address: {{ site_settings.address|default:"India" }}</li>
+        </ul>
     </div>
 </div>
 {% endblock %}

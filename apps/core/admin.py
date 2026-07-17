@@ -5,6 +5,13 @@ from apps.core.models import WebsiteSettings, ContactMessage, FAQ, Career, Caree
 @admin.register(WebsiteSettings)
 class WebsiteSettingsAdmin(admin.ModelAdmin):
     list_display = ['site_name', 'site_tagline', 'contact_email', 'contact_phone']
+    fieldsets = (
+        ('Site Info', {'fields': ('site_name', 'site_tagline', 'site_logo', 'site_favicon')}),
+        ('Contact', {'fields': ('contact_email', 'contact_phone', 'address')}),
+        ('Footer & Social', {'fields': ('footer_text', 'copyright_text', 'facebook_url', 'twitter_url', 'instagram_url', 'youtube_url', 'linkedin_url', 'telegram_url', 'whatsapp_number')}),
+        ('SEO', {'fields': ('meta_title', 'meta_description', 'meta_keywords')}),
+        ('Analytics & Maps', {'fields': ('google_analytics_id', 'google_maps_api_key')}),
+    )
 
 
 @admin.register(ContactMessage)
